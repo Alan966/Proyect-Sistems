@@ -7,10 +7,10 @@ module.exports = {
    },
    prod:{
     connectionLimit: 5,
-    // host: '34.30.18.208',
+   //  host: process.env.HOST,
     user: 'root',
     password: process.env.PASSWORD,
     database: 'proyect-sistmes',
-    // socketPath: "mysql-tech:us-central1:alan"
+   //  socketPath: process.env.SOCKET_PATH
    }
 };
