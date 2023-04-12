@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup</title>
+</head>
+<body>
+    <h1><%= title  %></h1>
+    <div id="message">
+    </div>
+    <div>
+        <a href="/">Volver</a>
+    </div>
+    <div class="content_form">
+        <form action="#" id="form_signup">
+            <div class="container_form">
+                <input
+                id="email"
+                type="text"
+                required
+                >
+                <label for="">Email</label>
+            </div>
+            <div class="container_form">
+                <input
+                id="password"
+                type="password"
+                required
+                >
+                <label for="">Password</label>
+            </div>
+            <div class="container_form">
+                <input
+                id="confirm_password"
+                type="password"
+                required
+                >
+                <label for="">Confirm Password</label>
+            </div>
+            <div class="container_form">
+                <input
+                id="username"
+                type="text"
+                required
+                >
+                <label for="">Username</label>
+            </div>
+            <input id="button_signup" type="button" value="Enviar">
+        </form>
+    </div>
+    <div class="parrafo">
+        <a href="/signin">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+
+    <script>
+        const button_signup = document.getElementById('button_signup');
+        const username = document.getElementById('username');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const password2 = document.getElementById('confirm_password');
+        const messageWindow = document.getElementById('message');
+        const form = document.getElementById('form_signup');
+
+    function veryfyPassword(password, password2){
+        if(password.value !== password2.value){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    async function sendData(data){
+        const response = await fetch('/signup' ,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            return response.json();
+        }).catch(error => {
+            console.log(error);
+            return null;
+        })
+        return response;
+    }
+
+    async function checkInputs(){
+        if(
+            username.value === '' ||
+            email.value === '' ||
+            password.value === '' ||
+            password2.value === ''
+            ){
+            messageWindow.innerHTML = 'Por favor rellene todos los campos';
+            messageWindow.style.color = 'red';
+            }else{
+                const passwords = veryfyPassword(password, password2);
+                if ( passwords === false){
+                    messageWindow.innerHTML = 'Las contraseñas no coinciden';
+                    messageWindow.style.color = 'red';
+                    return;
+                }else{
+                    const response = await sendData({
+                        username: username.value,
+                        email: email.value,
+                        password: password.value
+                    });
+                    const { success, message } = response;
+                    if(success === false){
+                        messageWindow.innerHTML = message;
+                        messageWindow.style.color = 'red';
+                        return;
+                    }else{
+                        alert('Success!')
+                        messageWindow.innerHTML = message;
+                        messageWindow.style.color = 'green';
+                        window.location.href = '/signin';
+                        return;
+                    }
+                }
+            }
+        }
+
+     button_signup.addEventListener('click', async e => {
+        e.preventDefault();
+        await checkInputs();
+    })
+    </script>
+</body>
+</html>

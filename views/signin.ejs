@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+</head>
+<body>
+    <h1><%= title  %></h1>
+    <div id="message"></div>
+    <div class="button">
+        <a href="/">Volver</a>
+    </div>
+    <div class="content_form">
+        <form action="#">
+            <div class="container_form">
+                <input
+                id="username"
+                type="text"
+                required
+                >
+                <label for="">Username</label>
+            </div>
+            <div class="container_form">
+                <input
+                id="password"
+                type="password"
+                required
+                >
+                <label for="">Password</label>
+            </div>
+            <input id="button_signin" type="button" value="Enviar">
+        </form>
+    </div>
+    <div class="parrafo">
+        <a href="/signup">¿No tienes cuenta? Registrate</a>
+    </div>
+    <script>
+        const button_signin = document.getElementById('button_signin');
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const messageWindow = document.getElementById('message');
+
+        async function checkValues(values){
+            const response = await fetch('/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            }).then(resp => {
+                return resp.json();
+            })
+            .catch(err => {
+                console.log(err);
+                return null
+            })
+            return response;
+        }
+        async function checkInputs(){
+            if(username.value === '' ||
+                password.value === ''
+            ){
+                messageWindow.innerHTML = 'Todos los campos son obligatorios';
+                messageWindow.style.color = 'red';
+                return;
+            }else{
+                messageWindow.innerHTML = 'Enviando datos...';
+                messageWindow.style.color = 'green';
+                const response = await checkValues({
+                    username: username.value,
+                    password: password.value
+                });
+                const { success, message } = response;
+                if(success !== true){
+                    messageWindow.innerHTML = message;
+                    messageWindow.style.color = 'red';
+                    return;
+                }else{
+                    messageWindow.innerHTML = message;
+                    messageWindow.style.color = 'green';
+                    window.location.href = '/dashboard';
+                    return;
+                }
+            }
+        }
+
+        button_signin.addEventListener('click', async e => {
+            e.preventDefault();
+            await checkInputs();
+        })
+    </script>
+</body>
+</html>
