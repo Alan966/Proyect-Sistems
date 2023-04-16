@@ -2,8 +2,6 @@ const bycrypt = require('bcrypt');
 const saltRounds = 10;
 const MySQL = require('../../connection');
 const jose = require('jose');
-const cookie = require('cookie');
-
 const signin = async (req, res) => {
 
     if(!req.body.password || !req.body.username) {
@@ -37,18 +35,15 @@ const signin = async (req, res) => {
     })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('30d')
+    .setExpirationTime('10h')
     .sign(secret);
 
 
-    const options = {
-  httpOnly: true,
-  maxAge: 86400000, // Tiempo de vida de la cookie en milisegundos (1 día)
-  secure: true, // Solo se envía la cookie a través de HTTPS
-  sameSite: 'strict' // La cookie solo se envía en solicitudes del mismo sitio
-};
-    res.setHeader('Set-Cookie', cookie.serialize('auth_token', auth_token, options));
-
+    res.cookie('auth_token', auth_token, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 36000000 // 10 hours
+    })
     res
     .status(200)
     .json({

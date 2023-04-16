@@ -36,7 +36,6 @@ async function checkIfAValuedExist( values, check_if_value_exist){
 
 const signup = async (req, res) => {
     if(!req.body.password || !req.body.username || !req.body.email) {
-        console.log(req.body)
         res.status(400).json({
             success: false,
             message: 'Faltan datos'

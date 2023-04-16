@@ -4,10 +4,138 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
     <title>Dashboard</title>
 </head>
 <body>
+    <header class="header_dash">
+        <div class="container_img">
+            <img class="img_dashboard" src="https://s3-symbol-logo.tradingview.com/rh--600.png" alt="This is the logo">
+        </div>
+        <div class="container_list">
+            <ul class="list_elements">
+                <li>
+                    username :
+                    <%= name %>
+                </li>
+                <li>
+                    email : 
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
     <h1>Welcome <%= title %></h1>
-    
+    <section id="find_empleado">
+        <div class="content_form">
+            <form action="#">
+                <div class="container_form">
+                    <input
+                    id="matricula_employer"
+                    type="text"
+                    >
+                    <label for="">Busca al empleado por su matricula</label>
+                </div>
+                <div class="container_form">
+                    <input
+                    id="name_employer"
+                    type="text"
+                    required
+                    >
+                    <label for="">Busca al empleador por nombre</label>
+                </div>
+            </form>
+        </div>
+        <!-- Here with js I put all users -->
+        <div id="employers">
+        </div>
+    </section>
+    <section id="find_anothers">
+        <div class="button button_find">
+            <a href="/escriturasFinanciamiento">Buscar por financiamiento de Escrituras</a>
+        </div>
+        <div class="button button_find">
+            <a href="/gastosEscrituras">Buscar por Gastos de Escrituras</a>
+        </div>
+        <div class="button button_find">
+            <a href="/pagaresVehiculos">Buscar por pagares de pagares de Vehiculos</a>
+        </div>
+        <div class="button button_find">
+            <a href="/pagaresMediano">Buscar por pagares a Mediano PLazo</a>
+        </div>
+    </section>
+
+    <script>
+        const matricula_employer = document.getElementById('matricula_employer')
+        const name_employer = document.getElementById('name_employer')
+        const employers = document.getElementById('employers')
+
+        async function getValuesUser(value){
+            const response = await fetch('/getValuesEmpleado',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(value)
+            }).then(resp => {
+                return resp;
+            })
+            .then(body => {
+                return body.json();
+            })
+            .catch(err => {
+                console.log(err)
+                return null
+            })
+            return response
+        }
+
+        async function getAllUsers(find_users_by, element_insert){
+            let employersWithThat = await getValuesUser(find_users_by)
+            element_insert.innerHTML = '';
+            for (let i = 0; i < employersWithThat.length; i++) {
+                const divContentUsers = document.createElement('div')
+                divContentUsers.innerHTML = `
+                    <div class="content_list">
+                        <p>${employersWithThat[i].matricula}</p>
+                        <p>${employersWithThat[i].name}</p>
+                        <div id="${employersWithThat[i].matricula}" class="button button_informacion"> Ver informacion</div>
+                    </div>
+                `
+                element_insert.appendChild(divContentUsers);
+            }
+        };
+
+        matricula_employer.addEventListener('keyup', async (e) => {
+            const find_employer_matricula = {
+                sql: `matricula`,
+                value: e.target.value
+            }
+            await getAllUsers(find_employer_matricula, employers)
+            if(employers.childNodes.length > 0){
+                 const childs  = document.querySelectorAll('.button_informacion')
+                   for(child of childs){
+                child.addEventListener('click', () => {
+                    window.location.href = `/employer/:${child.getAttribute('id')}`
+                })
+                   }}
+        })
+        name_employer.addEventListener('keyup', async (e) => {
+            const find_employer_name =  {
+                sql:`name`,
+                value: e.target.value
+            }
+            await getAllUsers(find_employer_name, employers)
+            if(employers.childNodes.length > 0){
+                const childs = document.querySelectorAll('.button_informacion')
+                for(child of childs){
+                    child.addEventListener('click', () => {
+                    window.location.href = `/employer/${child.getAttribute('id')}`
+                })
+                }
+            }
+        })
+
+    </script>
 </body>
 </html>
