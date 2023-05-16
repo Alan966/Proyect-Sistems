@@ -7,7 +7,7 @@ module.exports = {
    },
    prod:{
     connectionLimit: 5,
-   //  host: process.env.HOST,
+    host: process.env.HOST,
     user: 'root',
     password: process.env.PASSWORD,
     database: 'proyect-sistmes',

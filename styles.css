@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
 }
-
 .header_dash{
     display: flex;
     flex-direction: row;
@@ -37,7 +36,7 @@ li{
 .button_find{
     border: 1px solid black;
     padding: 1rem;
-    width: 100%;
+    width: 20em;
     background-color: blanchedalmond;
 }
 a{
@@ -60,6 +59,127 @@ a{
     background-color: green;
     color: white;
 }
-.button_informacion:hover{
+.button_informacion{
+    padding:0.5em;
+}
+.button_informacion:active{
     background-color: orange;
+}
+.button_delete{
+    background-color: red;
+    color: white;
+    padding:0.5em;
+
+}
+.button_delete:active{
+    background-color: orange;
+}
+.button_crear{
+    padding: 1em 1.5em;
+    background-color: #4158ec;
+    color: white;
+    border 1px solid black;
+    border-radius: 5px;
+}
+/* styles page employers */
+:root{
+    /* --width_table: 70vw; */
+}
+section#contentTables{
+    /* width: var(--width_table); */
+    height: 70vh;
+    margin: auto;
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+td a{
+    color: red;
+}
+td,th{
+    text-align: center;
+}
+.content_table{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.change_information{
+    /* width: var(--width_table); */
+    /* display: flex; */
+    width: 100%;
+    justify-content: flex-start;
+    /* margin-left:4.5em; */
+
+}
+td, th{
+    width: 5.5em;
+    height: 2em;
+    padding: 0;
+}
+input.input, select.input{
+    width: 7em;
+    height: 2em;
+}
+/* .inputOficio{
+    width: 10em;
+    height: 2em;
+} */
+input.inputOficio{
+    width: 10em;
+    height: 2em;
+}
+td.inputFecha{
+    width: 6em;
+    height: 2em;
+    padding: 0;
+}
+input.inputFecha{
+    width:7em;
+}
+.message{
+    color: red;
+}
+.contentMessages{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+.contentMessages div{
+    display: line;
+}
+.contentIndications{
+    display: flex;
+    width: 100%;
+}
+.indication{
+    width: 4.7em;
+    border: 1px solid black;
+    padding: 0.5em;
+}
+.indicationDate{
+    width:5.3em;
+}
+.change_information.gastos_escrituracion{
+    margin-left: auto;
+    margin-right: 0;
+}
+.container_input_table{
+    display: flex;
+    flex-direction: column;
+    width: 10em;
+    height: 4em;
+}
+.form_table{
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.button_informacion a{
+    color: white;
 }

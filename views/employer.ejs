@@ -3,27 +3,857 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
+    <header class="header_dash">
+        <div class="container_list">
+            <ul class="list_elements"  >
+                <li id="contend_user" data-token="<%= auth_token %>">
+                    username :
+                    <%= user %>
+                </li>
+                <li >
+                    email :
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+   <div class="contend_employer">
     <h1>Empleado</h1>
-    <p><%= user[0].name %></p>
-    <p><%= user[0].matricula %></p>
-    <table class="tableContent" border='1px solid black'>
-        <caption id="titleTable"></caption>
-    </table>
-    <% console.log(prestamos) %>
-    <% for(prestamo of prestamos){ %>
-        <% if(prestamo.type === 'pagares_vehiculos'){ %>
-            <% document.getElementbyId('titleTable').innerHTML = 'Financiamiento de Vehiculos' %>
-        <% } %>
-    <% } %>
+    <p> Nombre Completo :<%= employer[0].Nombre %></p>
+    <p id="identity-employer" data-matricula="<%= employer[0].MATRICULA %>">
+        Matricula : <%= employer[0].MATRICULA %>
+    </p>
+   </div>
+    <section id="contentTables">
+        <div id="content_pagares" class="content_table">
+            <% if(user.includes('admin')){ %>
+                %>
+                <button id="btn_add_pagare" class="button_crear">Agregar Pagare</button>
+            <% } else { %>
+                <% null %>
+            <% } %>
+            <table id="table_pagares" border="1px solid black">
+                <caption>Pagares Medino Plazo</caption>
+                <thead>
+                    <tr>
+                        <th >Id pagare</th>
+                        <th >Entregado</th>
+                        <th >Orden</th>
+                        <th>Fecha de recepcion</th>
+                        <th>Oficio recepecion</th>
+                        <th>Fecha recepcion del Oficio</th>
+                        <th>Fecha pagare</th>
+                        <th>Fecha contrato</th>
+                        <th>Oficio entrega </th>
+                        <th>Fecha entrega del oficio</th>
+                        <th>Fecha entrega</th>
+                        <th>Destino</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(const [key, value] of allPrestamos ){ %>
+                        <% if(key.includes('pagares_mediano')){ %>
+                            <tr>
+                                <td id="no_pagaresMediano" data-id="<%= value.no_pagaresMediano %>"><%= value.no_pagaresMediano %></td>
+                                <td data-entregado="<%= value.entregado %>" class="entregado"></td>
+                                <td data-orden="<%= value.orden %>" class="orden"></td>
+                                <% if(value.fecha_recepcion?.getDate() !== undefined){ %>
+                                    <td><%= `${value.fecha_recepcion?.getDate()}/${value.fecha_recepcion?.getMonth() + 1}/${value.fecha_recepcion?.getFullYear()}` %></td>
+                                <% }else{ %>
+                                    <td></td>
+                                <% } %>
+                                <td><%= value.oficio_recepcion %></td>
+                                <% if(value.fecha_recepcion_oficio?.getDate() !== undefined){ %>
+                                    <td class="inputFecha"><%= `${value.fecha_recepcion_oficio?.getDate()}/${value.fecha_recepcion_oficio?.getMonth() + 1}/${value.fecha_recepcion_oficio?.getFullYear()}` %></td>
+                                <% }else{ %>
+                                    <td></td>
+                                <% } %>
+                                <% if(value.fecha_pagare?.getDate() !== undefined){ %>
+                                    <td class="inputFecha"><%= `${value.fecha_pagare?.getDate()}/${value.fecha_pagare?.getMonth() + 1}/${value.fecha_pagare?.getFullYear()}` %></td>
+                                <% }else{ %>
+                                    <td></td>
+                                <% } %>
+                                <% if(value.fecha_contrato?.getDate() !== undefined){ %>
+                                    <td class="inputFecha"><%= `${value.fecha_contrato?.getDate()}/${value.fecha_contrato?.getMonth() + 1}/${value.fecha_contrato?.getFullYear()}`%></td>
+                                <% }else{ %>
+                                    <td></td>
+                                <% } %>
+                                <td><%= value.oficio_entrega  %></td>
+                                <% if(value.fecha_entrega_oficio?.getDate() !== undefined){ %>
+                                    <td class="inputFecha"><%= `${value.fecha_entrega_oficio?.getDate()}/${value.fecha_entrega_oficio?.getMonth() + 1}/${value.fecha_entrega_oficio?.getFullYear()}`%></td>
+                                <% }else{ %>
+                                    <td></td>
+                                <% } %>
+                                <% if(value.fecha_entrega?.getDate() !== undefined){ %>
+                                    <td class="inputFecha"><%= `${value.fecha_entrega?.getDate()}/${value.fecha_entrega?.getMonth() + 1}/${value.fecha_entrega?.getFullYear()}`%></td>
+                                <% }else{ %>
+                                    <td></td>
+                                <% } %>
+                                <td><%= value.destino %></td>
+                                <% if(user.includes('admin')){ %>
+                                    <td  id="button_informacion" class="button_informacion change_pagare"> Cambiar </td>
+                                    <td id="button_delete" class="button_delete change_pagare"> Eliminar </td>
+                                <% }else{ %>
+                                    <td class="button_read"> Solo lectura</td>
+                                <% } %>
+                            </tr>
+                        <% }%>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div id="content_financiamiento" class="content_table">
+            <% if(user.includes('admin')){ %>
+                <button id="btn_add_financiamiento" class="button_crear">Agregar Financiamiento</button>
+            <% } else { %>
+                <% null %>
+            <% } %>
+            <table border="1px solid black" id="table_financiamiento">
+                <caption>Financiamiento de escrituras</caption>
+                <thead>
+                    <tr>
+                        <th>Id Financiamiento </th>
+                        <th>Entregado</th>
+                        <th>Orden</th>
+                        <th>Oficio recepcion</th>
+                        <th>Fecha recepcion del Oficio</th>
+                        <th>Fecha recepcion</th>
+                        <th>Escritura</th>
+                        <th>Financiamiento Fecha</th>
+                        <th>Notaria</th>
+                        <th>Tiempo Max Guardia</th>
+                        <th>Oficio Entrega</th>
+                        <th>Fecha Entrega</th>
+                        <th>Dependencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(const [key, value] of allPrestamos ){ %>
+                    <% if(key.includes('gastos_escritura') && !key.includes('gastos_escrituracion')){ %>
+                    <tr>
+                        <td id="no_financiamiento" data-id="<%= value.no_financiamiento %>"><%= value.no_financiamiento %></td>
+                        <td data-entregado="<%= value.entrega %>" class="entregado input"></td>
+                        <td data-orden="<%= value.orden %>" class="orden input"></td>
+                        <td ><%= value.oficio_recepcion %></td>
+                        <% if(value.fecha_oficio_recepcion?.getDate() !== undefined){ %>
+                            <td class="inputFecha"><%= `${value.fecha_oficio_recepcion?.getDate()}/${value.fecha_oficio_recepcion?.getMonth() + 1}/${value.fecha_oficio_recepcion?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <% if(value.fecha_recepcion?.getDate() !== undefined){ %>
+                            <td class="inputFecha" ><%= `${value.fecha_recepcion?.getDate()}/${value.fecha_recepcion?.getMonth() + 1}/${value.fecha_recepcion?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <td ><%= value.escritura %></td>
+                        <% if(value.financiamiento_fecha?.getDate() !== undefined){ %>
+                            <td class="inputFecha"><%= `${value.financiamiento_fecha?.getDate()}/${value.financiamiento_fecha?.getMonth() + 1}/${value.financiamiento_fecha?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <td ><a href="/notarias/<%= value.notaria %>"> <%= value.notaria %></a></td>
+                        <td ><%= value.tiempo_guardia %></td>
+                        <td ><%= value.no_entrega_oficio  %></td>
+                        <% if(value.fecha_entrega_oficio?.getDate() !== undefined){ %>
+                            <td class="inputFecha"><%= `${value.fecha_entrega_oficio?.getDate()}/${value.fecha_entrega_oficio?.getMonth() + 1}/${value.fecha_entrega_oficio?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <td ><%= value.dependencia %></td>
+                        <% if(user.includes('admin')){ %>
+                            <td  id="button_informacion" class="button_informacion change_financiamiento"> Cambiar </td>
+                            <td id="button_delete" class="button_delete change_financiamiento"> Eliminar </td>
+                        <% }else{ %>
+                            <td class="button_read"> Solo lectura</td>
+                        <% } %>
+                    </tr>
+                    <% }%>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div id="content_gastosEscrituracion" class="content_table">
+            <% if(user.includes('admin')){ %>
+                <button id="btn_add_gastosEscrituracion" class="button_crear">Agregar Gastos Escrituracion</button>
+            <% } else { %>
+                <% null %>
+            <% } %>
+            <table id="table_gastosEscrituracion" border="1px solid black">
+                <caption>Gastos Escrituras</caption>
+                <thead>
+                    <tr>
+                        <th>Id Escritura</th>
+                        <th>Entregado</th>
+                        <th>Orden</th>
+                        <th>Fecha recepcion</th>
+                        <th>Oficio recepcion</th>
+                        <th>Fecha recepcion Oficio</th>
+                        <th>Fecha Pagare</th>
+                        <th>Fecha Contrato</th>
+                        <th>Oficio entrega</th>
+                        <th>Fecha Oficio Entrega</th>
+                        <th>Fecha Entrega</th>
+                        <th>Destino</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(const [key, value] of allPrestamos ){ %>
+                        <% if(key.includes('gastos_escrituracion')){ %>
+                        <tr>
+                            <td id="no_escrituracion" data-id="<%= value.no_escrituracion %>"><%= value.no_escrituracion %></td>
+                            <td data-entregado="<%= value.entregado %>" class="entregado"></td>
+                            <td data-orden="<%= value.orden %>" class="orden"></td>
+                            <% if(value.fecha_recepcion?.getDate() !== undefined){ %>
+                                <td class="inputFecha"><%= `${value.fecha_recepcion?.getDate()}/${value.fecha_recepcion?.getMonth() + 1}/${value.fecha_recepcion?.getFullYear()}` %></td>
+                            <% }else{ %>
+                                <td></td>
+                            <% } %>
+                            <td><%= value.no_oficio_recepcion %></td>
+                            <% if(value.fecha_oficio_recepcion?.getDate() !== undefined){ %>
+                                <td class="inputFecha"><%= `${value.fecha_oficio_recepcion?.getDate()}/${value.fecha_oficio_recepcion?.getMonth() + 1}/${value.fecha_oficio_recepcion?.getFullYear()}` %></td>
+                            <% }else{ %>
+                                <td></td>
+                            <% } %>
+                            <% if(value.fecha_pagare?.getDate() !== undefined){ %>
+                                <td class="inputFecha"><%= `${value.fecha_pagare?.getDate()}/${value.fecha_pagare?.getMonth() + 1}/${value.fecha_pagare?.getFullYear()}` %></td>
+                            <% }else{ %>
+                                <td></td>
+                            <% } %>
+                            <% if(value.fecha_contrato?.getDate() !== undefined ){ %>
+                                <td class="inputFecha"><%= `${value.fecha_contrato?.getDate()}/${value.fecha_contrato?.getMonth() + 1}/${value.fecha_contrato?.getFullYear()}` %></td>
+                            <% }else{ %>
+                                <td></td>
+                            <% } %>
+                            <td><%= value.no_oficio_entrega  %></td>
+                            <% if(value.fecha_oficio_entrega?.getDate() !== undefined){ %>
+                                <td class="inputFecha"><%= `${value.fecha_oficio_entrega?.getDate()}/${value.fecha_oficio_entrega?.getMonth() + 1}/${value.fecha_oficio_entrega?.getFullYear()}` %></td>
+                            <% }else{ %>
+                                <td></td>
+                            <% } %>
+                            <% if(value.fecha_entrega?.getDate() !== undefined){ %>
+                                <td class="inputFecha"><%= `${value.fecha_entrega?.getDate()}/${value.fecha_entrega?.getMonth() + 1}/${value.fecha_entrega?.getFullYear()}` %></td>
+                            <% }else{ %>
+                                <td></td>
+                            <% } %>
+                            <td><%= value.destino %></td>
+                            <% if (user.includes('admin')){ %>
+                                <td class="button_informacion change_gastos"> Cambiar Informacion</td>
+                                <td id="button_delete" class="button_delete change_gastos"> Eliminar </td>
+                            <% } else { %>
+                                <td class="button_read"> Solo lectura</td>
+                            <% } %>
+                        </tr>
+                        <% }%>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="content_table" id="content_pagaresVehiculos">
+            <% if(user.includes('admin')){ %>
+                <button id="btn_add_pagaresVehiculos" class="button_crear">Agregar Pagares Vehiculos</button>
+            <% } else { %>
+                <% null %>
+            <% } %>
+            <table id="table_pagaresVehiculos" border="1px solid black">
+                <caption>Pagares por Vehiculos</caption>
+                <thead>
+                    <tr>
+                        <th>Id Pagare_vehiuclo</th>
+                        <th>Entregado</th>
+                        <th>Orden</th>
+                        <th>Fecha recepcion</th>
+                        <th>No.Oficio</th>
+                        <th>No.Solicitud</th>
+                        <th>Fecha Solicitud</th>
+                        <th>Fecha Entrega</th>
+                        <th>Destino</th>
+                        <th>No.Factura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(const [key, value] of allPrestamos ){ %>
+                    <% if(key.includes('pagares_vehiculos')){ %>
+                    <tr>
+                        <td id="no_pagare_vehiculo" data-id="<%= value.no_pagare %>"><%= value.no_pagare %></td>
+                        <td data-entregado="<%= value.entregado %>" class="entregado"></td>
+                        <td data-orden="<%= value.orden %>" class="orden"></td>
+                        <% if(value.fecha_recepcion?.getDate() !== undefined){ %>
+                            <td class="inputFecha"><%= `${value.fecha_recepcion?.getDate()}/${value.fecha_recepcion?.getMonth() + 1}/${value.fecha_recepcion?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <td><%= value.no_oficio %></td>
+                        <td><%=  value.no_solicitud %></td>
+                        <% if(value.fecha_solicitud?.getDate() !== undefined){ %>
+                            <td class="inputFecha"><%= `${value.fecha_solicitud?.getDate()}/${value.fecha_solicitud?.getMonth() + 1}/${value.fecha_solicitud?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <% if(value.fecha_entrega?.getDate()!== undefined){ %>
+                            <td class="inputFecha"><%= `${value.fecha_entrega?.getDate()}/${value.fecha_entrega?.getMonth() + 1}/${value.fecha_entrega?.getFullYear()}` %></td>
+                        <% }else{ %>
+                            <td></td>
+                        <% } %>
+                        <td><%= value.destino  %></td>
+                        <td><%= value.no_factura %></td>
+                        <% if(user.includes('admin')){ %>
+                            <td class="button_informacion change_pagaresVehiculos"> Cambiar Informacion</td>
+                            <td id="button_delete" class="button_delete change_pagaresVehiculos"> Eliminar </td>
+                        <% } else { %>
+                            <td class="button_read"> Solo lectura</td>
+                        <% } %>
+                    </tr>
+                    <% }%>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+</section>
 </body>
 <script>
-    function pagaresVehiculos( objeto ){
-        return{
+    const entregados = document.querySelectorAll('.entregado');
+    const ordenes = document.querySelectorAll('.orden');
+
+    //Selectores en general
+    const matricula = document.getElementById('identity-employer').dataset.matricula;
+    const token = document.getElementById('contend_user').dataset.token;
+    const content_buttons_information = document.querySelectorAll('.button_informacion');
+    const content_buttons_delete = document.querySelectorAll('.button_delete');
+
+
+
+    // Selectores financiamiento
+    const no_financiamiento = document.getElementById('no_financiamiento');
+    const content_financiamiento = document.getElementById('content_financiamiento');
+    const table_financiamiento = document.getElementById('table_financiamiento');
+    const button_add_finaciamiento = document.getElementById('btn_add_financiamiento')
+    // selectores gastos
+    const no_escrituracion = document.getElementById('no_escrituracion');
+    const content_gastos = document.getElementById('content_gastosEscrituracion');
+    const table_gastos = document.getElementById('table_gastosEscrituracion');
+    const button_add_gastos = document.getElementById('btn_add_gastosEscrituracion');
+    //Selectores pagares
+    const no_pagaresMediano = document.getElementById('no_pagaresMediano');
+    const content_pagares = document.getElementById('content_pagares');
+    const table_pagares = document.getElementById('table_pagares');
+    const button_add_pagares = document.getElementById('btn_add_pagare');
+    //Selectores pagares vehiculos
+    const no_pagare = document.getElementById('no_pagare_vehiculo');
+    const content_pagaresVehiculos = document.getElementById('content_pagaresVehiculos');
+    const table_pagaresVehiculos = document.getElementById('table_pagaresVehiculos');
+    const button_add_pagaresVehiculos = document.getElementById('btn_add_pagaresVehiculos');
+
+
+    function textEntregado(Parent){
+    for(entregado of Parent){
+        if(entregado.dataset.entrega === '0'){
+        entregado.textContent = 'No entregado';
+    }else{
+        entregado.textContent = 'Entregado';
+    }
+    }}
+    function textOrden(Parent){
+        for(orden of Parent){
+            if(orden.dataset.orden === '0'){
+                orden.textContent = 'Ya fue entregado';
+            }else{
+                orden.textContent = orden.dataset.orden;
+            }
         }
+    }
+    textEntregado(entregados);
+    textOrden(ordenes);
+
+   for (button_information of content_buttons_information){
+    const class_Button = button_information.getAttribute('class').split(' ')[1];
+    switch(class_Button){
+        case'change_financiamiento':
+        buttonChangeInformacion(
+            button_information,
+            content_financiamiento,
+            createFormFinanciameinto,
+            table_financiamiento,
+            '/financiamiento_escrituras/updatefinaciamiento')
+        break;
+        case'change_gastos':
+        buttonChangeInformacion(
+            button_information,
+            content_gastos,
+            createFormGastosEscrituracion,
+            table_gastos,
+            '/gastosEscrituras/updategastos')
+        break;
+        case'change_pagare':
+        buttonChangeInformacion(
+            button_information,
+            content_pagares,
+            createFormPagaresMediano,
+            table_pagares,
+            '/pagaresMediano/updatepagares')
+        break;
+        case "change_pagaresVehiculos":
+        buttonChangeInformacion(
+            button_information,
+            content_pagaresVehiculos,
+            createFormPagaresVehiculos,
+            table_pagaresVehiculos,
+            '/pagaresVehiculos/updatepagares')
+        break;
+    }
+}
+    for(button_delete of content_buttons_delete){
+        const class_Button = button_delete.getAttribute('class').split(' ')[1];
+        switch(class_Button){
+            case'change_financiamiento':
+            buttonDelete(button_delete, 'Financiamiento' ,no_financiamiento, token, '/financiamiento_escrituras/deletefinanciamiento');
+            break;
+            case'change_gastos':
+            buttonDelete(button_delete, 'Gasto' ,no_escrituracion, token, '/gastosEscrituras/deletegastos');
+            break;
+            case'change_pagare':
+            buttonDelete(button_delete, 'Pagare Mediano' , no_pagaresMediano, token, '/pagaresMediano/deletepagare');
+            break;
+            case "change_pagaresVehiculos":
+            buttonDelete(button_delete, 'Financiamiento Vehiculo' , no_pagare, token, '/pagaresVehiculos/deletepagare');
+            break;
+        }
+    }
+
+    button_add_finaciamiento.addEventListener('click', (e) => {
+        const indications = ['Entregado', 'Orden', 'Oficio Recepcion', 'Fecha Recepcion del Oficio',
+                'Fecha recepcion', 'Escritura', 'Financiamiento Fecha',
+                'Notaria', 'Tiempo Guardia', 'Oficio Entrega','Fecha Entrega', 'Dependencia'];
+        buttonAddDeuda(content_financiamiento, createFormFinanciameinto, 'Financiamiento', indications, table_financiamiento, 14, '/financiamiento_escrituras/createfinanciaiento');
+    });
+
+
+    button_add_gastos.addEventListener('click', (e) => {
+        const indications = [
+                'Entregado', 'Orden', 'Fecha Recepcion', 'Oficio Recepcion',
+                'Fecha Recepcion Ofico', 'Fecha Pagare', 'Fecha Contrato',
+                'Oficio Entrega', 'Fecha Oficio Entrega','Fecha Entrega',
+                'Destino'
+            ]
+        buttonAddDeuda(content_gastos, createFormGastosEscrituracion, 'Escrituracion', indications, table_gastos, 13, '/gastosEscrituras/createEscrituraGastos');
+    })
+    button_add_pagares.addEventListener('click', (e) => {
+        const indication= [
+            'Entregado', 'Orden','Fecha Recepcion', 'Oficio Recepcion',
+            'Fecha recepcion Oficio','Fecha Pagare', 'Fecha Contrato',
+            'Oficio Entrega', 'Fecha Entrega del Oficio', 'Fecha Entrega',
+            'Destino'
+        ];
+        buttonAddDeuda(content_pagares, createFormPagaresMediano, 'Pagare Mediano', indication, table_pagares, 13, '/pagaresMediano/createpagare');
+    })
+    button_add_pagaresVehiculos.addEventListener('click', (e) => {
+        const indication = [
+            'Entregado', 'Orden', 'Fecha Recepcion','No. Oficio',
+            'No. Solicitud', 'Fecha Solicitud', 'Fecha Entrega',
+            'Destino', 'No. Factura'
+        ]
+        buttonAddDeuda(content_pagaresVehiculos, createFormPagaresVehiculos, 'Financiamiento Vehiculo', indication, table_pagaresVehiculos, 11, '/pagaresVehiculos/createpagare');
+    })
+
+   function buttonChangeInformacion(button, container, createForm, table_adeudo, url){
+        button.addEventListener('click', () => {
+            if(container.children[container.children.length - 1].getAttribute('class')?.split(" ")[0] !=='change_information'){
+                const form = createForm('Actualizar', 'actualizar', true);
+                table_adeudo.insertAdjacentElement('afterend', form);
+                const button_actualizar = document.getElementById('actualizar');
+                button_actualizar?.addEventListener('click', async () => {
+                    await updateData(form, container, container.children[3], url);
+                })
+                const button_cancelar = document.getElementById('cancelar');
+                cancelCreateService(button_cancelar, container);
+            }
+        });
+    }
+function buttonDelete(button, tipedeuda, id_deuda, token, url){
+        button.addEventListener('click', async () => {
+            let confirm_delete = confirm(`¿Estas seguro de eliminar este ${tipedeuda}`)
+            if(confirm_delete){
+                const response = await DeleteDeuda(id_deuda.dataset.id, token, url);
+                if(response.success || !response.success !== false){
+                    alert(response.message);
+                    location.reload();
+                }
+            }
+        })
+    }
+    function buttonAddDeuda(contenedor, createForm, message, indications, tabla, number, url){
+        if(contenedor.children[1].getAttribute('class') !== 'contentIndications'){
+            const form = createForm(`Crear ${message}`, `crear_${message}`);
+            const contendIndications = createIndications(indications);
+            tabla.insertAdjacentElement('beforebegin', contendIndications);
+            tabla.insertAdjacentElement('beforebegin', form);
+            const button_crear = document.getElementById(`crear_${message}`);
+            createNewFinaciamiento(form, button_crear, number, url);
+            const button_cancel = document.getElementById('cancelar');
+            cancelCreateService(button_cancel, contenedor);
+        }
+    }
+
+    function createNewFinaciamiento(form, button, number, url ){
+            button.addEventListener('click', async () => {
+                const {dataActualizar, messages} = await createData(form, 1);
+                createContentMessages(form, messages, form.children[number]);
+                if(messages.length === 0){
+                    const response = await createDeuda(dataActualizar, token, url);
+                    if(response.success || response.success === false){
+                        alert(response.message);
+                        location.reload();
+                    }
+                }
+            })
+    }
+
+    function cancelCreateService(button, grandParent){
+        button.addEventListener('click', () => {
+            console.log(button, grandParent.children[1]);
+            grandParent.children[1].getAttribute('class') === 'contentIndications' &&
+            grandParent.removeChild(grandParent.children[1]);
+            grandParent.removeChild(button.parentElement)
+            const contendMessage = document.querySelector('.contentMessages')
+            contendMessage &&
+            contendMessage.parentElement === grandParent &&
+            grandParent.removeChild(contendMessage);
+        })
+    }
+
+    async function createDeuda(data, token, url){
+        return await fetch(url , {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        .then(resp =>{
+            return resp.json();
+        })
+        .catch(err => {
+            console.log(err);
+            return null;
+        })
+    }
+    async function DeleteDeuda(identificador, token, url){
+        console.log(identificador, token);
+        return await fetch(url ,{
+            method: 'DELETE',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({identificador})
+        }).
+        then(response => {
+            return response.json()})
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
+    async function updateData( contendInformation, content_table, child_remplace, url){
+            const {dataActualizar, messages} = await createData(contendInformation);
+            console.log(dataActualizar, messages);
+
+            createContentMessages( content_table , messages, child_remplace);
+            if(messages.length === 0){
+                const response = await UpdatePrestamo(dataActualizar ,url);
+                if(response.success || response.success === false){
+                    alert(response.message);
+                    location.reload();
+                }
+            }
+    }
+
+    async function knowIfIsANotaria(notaria){
+    console.log(notaria)
+    const response = await fetch('/notarias',{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                notaria: notaria
+            })
+        }).then(resp => {
+            return resp.json();
+        })
+        .then(resp => {
+            return resp.success;
+        })
+        .then(resp => {
+            return createMessageIsANotaria(resp);
+        })
+        .catch(err => {
+            console.log(err)
+            return false
+        })
+        return response
+}
+
+    async function createData(contendInformation, elements = 0){
+        console.log(elements)
+            let  dataActualizar = {};
+            let messages = [];
+            if(elements === 1){
+                dataActualizar.matricula = matricula;
+            }
+            for(elements = 0; contendInformation.length - 2 > elements; elements++){
+                if(contendInformation[elements].value){
+                    dataActualizar = {
+                        ...dataActualizar,
+                        [contendInformation[elements].getAttribute('id')]: contendInformation[elements].value
+                    }
+                    if(contendInformation[elements].getAttribute('class').includes('number')){
+                        const message = KnowIfIsANumber(contendInformation[elements].value, contendInformation[elements].getAttribute('id'));
+                        if(message){
+                            messages.push(message);
+                        }
+                    }
+                    if(contendInformation[elements].getAttribute('class').includes('notaria')){{
+                        const message = await knowIfIsANotaria(contendInformation[elements].value);
+                        if(message){
+                            messages.push(message);
+                        }
+
+                    }
+
+                    }
+                }
+            }
+            return {dataActualizar, messages};
+    }
+
+    async function UpdatePrestamo(data, url){
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers:{
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response =>{
+            return response.json()
+        })
+        .catch(error =>{
+            console.log(error)
+            return null;
+        })
+        return response;
+    }
+
+    function createIndications(childs){
+        const contentInfications = document.createElement('div');
+        contentInfications.classList.add('contentIndications');
+        childs.forEach(child => {
+            const messageElement = document.createElement('p');
+            messageElement.classList.add('indication');
+            messageElement.textContent = child;
+            if(child.includes('Fecha')){
+                messageElement.classList.add('indicationDate');
+            }
+            contentInfications.appendChild(messageElement);
+        })
+        return contentInfications;
+    }
+    function createContentMessages (father, messages, selectChild){
+        const contentMessages = document.createElement('div');
+            contentMessages.classList.add('contentMessages');
+        if(messages.length < 1 && selectChild !== undefined){
+            father.removeChild(selectChild);
+            return;
+        }else if(messages.length < 1){
+            return;
+        }
+        messages.forEach(message => {
+            const messageElement = document.createElement('p');
+            messageElement.classList.add('message');
+            messageElement.textContent = message;
+            contentMessages.appendChild(messageElement);
+        })
+        if(selectChild !== undefined){
+            father.replaceChild(contentMessages, selectChild);
+        }else{
+            father.appendChild(contentMessages);
+        }
+    }
+
+    function createMessageIsANotaria(response){
+        if(!response){
+            return 'No se encontro la notaria'
+        }else{
+            return false
+        }
+    }
+
+
+
+    function createSelect(id, values, father){
+        const select = document.createElement('select');
+        select.classList.add('input');
+        select.setAttribute('id', id);
+        for(value of values){
+            const option = document.createElement('option');
+            option.setAttribute('value', value.value);
+            option.textContent = value.text;
+            select.appendChild(option);
+        }
+        father.appendChild(select);
+    }
+    function createInput(type, id, father, clases, value, ){
+        const input = document.createElement('input');
+        type === 'text' && input.classList.add('input');
+        input.setAttribute('type', type);
+        value && input.setAttribute('value', value);
+        clases
+        &&
+        clases.forEach(clase => {
+            input.classList.add(clase);
+        });
+        input.setAttribute('id', id);
+        father.appendChild(input);
+    }
+    function KnowIfIsANumber(child, message){
+            if(child !== '' ){
+                const orden = parseInt(child);
+                if(isNaN(orden)){
+                    return `${message} debe ser un  numero `;
+                }
+                return false;
+            }
+
+        return false;
+    }
+
+    function createFormFinanciameinto(functionButton, id_button , id_financiamiento = false){
+        const changeInformationElemet = document.createElement('form');
+        changeInformationElemet.setAttribute('id', 'change_information');
+        changeInformationElemet.classList.add('change_information');
+        id_financiamiento === true && createInput('text', 'no_financiamiento', changeInformationElemet);
+        createSelect('entrega', [
+            {
+                value: '1',
+                text: 'Entregado'
+            },
+            {
+                value: '0',
+                text: 'No Entregado'
+            }
+        ], changeInformationElemet)
+        createInput('text', 'orden', changeInformationElemet, ['number']);
+        createInput('text', 'oficio_recepcion', changeInformationElemet, ['inputOficio']);
+        createInput('date', 'fecha_oficio_recepcion', changeInformationElemet, ['inputFecha']);
+        createInput('date', 'fecha_recepcion', changeInformationElemet, ['inputFecha']);
+        createInput('text', 'escritura', changeInformationElemet, ['number']);
+        createInput('date', 'financiamiento_fecha', changeInformationElemet, ['inputFecha']);
+        createInput('text', 'notaria', changeInformationElemet, ['notaria']);
+        createInput('text', 'tiempo_guardia', changeInformationElemet, ['number']);
+        createInput('text', 'no_entrega_oficio', changeInformationElemet);
+        createInput('date', 'fecha_entrega_oficio', changeInformationElemet, ['inputFecha','number']);
+        createInput('text', 'dependencia', changeInformationElemet);
+        createInput('button', id_button, changeInformationElemet, ['button_informacion'], `${functionButton}`);
+        createInput('button', 'cancelar', changeInformationElemet, [, 'button_delete'], 'Cancelar');
+        return changeInformationElemet;
+    }
+
+    function createFormGastosEscrituracion(functionButton, id_button, id_gastos = false){
+        const changeInformationElement = document.createElement('form');
+        changeInformationElement.setAttribute('id', 'change_information');
+        changeInformationElement.classList.add('change_information');
+        changeInformationElement.classList.add('gastos_escrituracion');
+        id_gastos === true && createInput('text', 'no_escrituracion', changeInformationElement);
+        createSelect('entregado', [
+            {
+                value: '1',
+                text: 'Entregado'
+            },
+            {
+                value: '0',
+                text: 'No Entregado'
+            }
+        ], changeInformationElement)
+        createInput('text', 'orden', changeInformationElement, ['number']);
+        createInput('date', 'fecha_recepcion', changeInformationElement, ['inputFecha']);
+        createInput('text', 'no_oficio_recepcion', changeInformationElement, ['inputOficio']);
+        createInput('date', 'fecha_oficio_recepcion', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_pagare', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_contrato', changeInformationElement, ['inputFecha']);
+        createInput('text', 'no_oficio_entrega', changeInformationElement, ['inputOficio']);
+        createInput('date', 'fecha_oficio_entrega', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_entrega', changeInformationElement, ['inputFecha']);
+        createInput('text', 'destino', changeInformationElement,);
+        createInput('button', id_button, changeInformationElement, ['button_informacion'], `${functionButton}`);
+        createInput('button', 'cancelar', changeInformationElement, [, 'button_delete'], 'Cancelar');
+    return changeInformationElement;
+    }
+    function createFormPagaresMediano(functionButton, id_button, id_pagare){
+        const changeInformationElement = document.createElement('form');
+        changeInformationElement.setAttribute('id', 'change_information');
+        changeInformationElement.classList.add('change_information');
+        changeInformationElement.classList.add('pagares_mediano');
+        id_pagare === true && createInput('text', 'no_pagaresMediano', changeInformationElement);
+        createSelect('entregado', [
+            {
+                value: '1',
+                text: 'Entregado'
+            },
+            {
+                value: '0',
+                text: 'No Entregado'
+            }
+        ], changeInformationElement)
+        createInput('text', 'orden', changeInformationElement, ['number']);
+        createInput('date', 'fecha_recepcion', changeInformationElement, ['inputFecha']);
+        createInput('text', 'oficio_recepcion', changeInformationElement, ['inputOficio']);
+        createInput('date', 'fecha_recepcion_oficio', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_pagare', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_contrato', changeInformationElement, ['inputFecha']);
+        createInput('text', 'oficio_entrega', changeInformationElement, ['inputOficio']);
+        createInput('date', 'fecha_entrega_oficio', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_entrega', changeInformationElement, ['inputFecha']);
+        createInput('text', 'destino', changeInformationElement, );
+        createInput('button', id_button, changeInformationElement, ['button_informacion'], `${functionButton}`);
+        createInput('button', 'cancelar', changeInformationElement, [, 'button_delete'], 'Cancelar');
+    return changeInformationElement;
+    }
+    function createFormPagaresVehiculos(functionButton, id_button, id_pagareVehiculos){
+        const changeInformationElement = document.createElement('form');
+        changeInformationElement.setAttribute('id', 'change_information');
+        changeInformationElement.classList.add('change_information');
+        changeInformationElement.classList.add('pagares_vehiculos');
+        id_pagareVehiculos === true && createInput('text', 'no_pagare', changeInformationElement);
+        createSelect('entregado', [
+            {
+                value: '1',
+                text: 'Entregado'
+            },
+            {
+                value: '0',
+                text: 'No Entregado'
+            }
+        ], changeInformationElement)
+        createInput('text', 'orden', changeInformationElement, ['number']);
+        createInput('date', 'fecha_recepcion', changeInformationElement, ['inputFecha']);
+        createInput('text', 'no_oficio', changeInformationElement, ['inputOficio']);
+        createInput('text', 'no_solicitud', changeInformationElement, ['inputOficio']);
+        createInput('date', 'fecha_solicitud', changeInformationElement, ['inputFecha']);
+        createInput('date', 'fecha_entrega', changeInformationElement, ['inputFecha']);
+        createInput('text', 'destino', changeInformationElement);
+        createInput('text', 'no_factura', changeInformationElement);
+        createInput('button', id_button, changeInformationElement, ['button_informacion'], `${functionButton}`);
+        createInput('button', 'cancelar', changeInformationElement, [, 'button_delete'], 'Cancelar');
+    return changeInformationElement;
     }
 </script>
 </html>

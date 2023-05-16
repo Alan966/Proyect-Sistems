@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+    <title>Notarias</title>
+</head>
+<body>
+    <header class="header_dash">
+        <div class="container_list">
+            <ul class="list_elements"  >
+                <li id="contend_user" data-token="<%= auth_token %>">
+                    username :
+                    <%= user %>
+                </li>
+                <li >
+                    email :
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1><%= title %></h1>
+    <div class="class_notaria">
+        <h3>Numero de Notaria: <%= notaria.no_notaria %></h3>
+        <h3>Delegacion de Notaria <%= notaria.delegacion %></h3>
+        <img src="https://fastly.4sqi.net/img/general/600x600/25166772_V1nI-EneA3DaQpJ4ONEGeyvpxl7p_R8cJNYQyGq4JVA.jpg" alt="Notaria">
+    </div>
+</body>
+</html>

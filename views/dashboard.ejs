@@ -14,7 +14,7 @@
         </div>
         <div class="container_list">
             <ul class="list_elements">
-                <li>
+                <li id="token" data-token="<%= token %>">
                     username :
                     <%= name %>
                 </li>
@@ -52,7 +52,7 @@
     </section>
     <section id="find_anothers">
         <div class="button button_find">
-            <a href="/escriturasFinanciamiento">Buscar por financiamiento de Escrituras</a>
+            <a href="/financiamiento_escrituras">Buscar por financiamiento de Escrituras</a>
         </div>
         <div class="button button_find">
             <a href="/gastosEscrituras">Buscar por Gastos de Escrituras</a>
@@ -69,12 +69,14 @@
         const matricula_employer = document.getElementById('matricula_employer')
         const name_employer = document.getElementById('name_employer')
         const employers = document.getElementById('employers')
+        const token = document.getElementById('token')
 
         async function getValuesUser(value){
             const response = await fetch('/getValuesEmpleado',{
                 method: 'POST',
                 headers:{
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    authorization: 'Bearer ' + token.dataset.token
                 },
                 body: JSON.stringify(value)
             }).then(resp => {
@@ -97,9 +99,9 @@
                 const divContentUsers = document.createElement('div')
                 divContentUsers.innerHTML = `
                     <div class="content_list">
-                        <p>${employersWithThat[i].matricula}</p>
-                        <p>${employersWithThat[i].name}</p>
-                        <div id="${employersWithThat[i].matricula}" class="button button_informacion"> Ver informacion</div>
+                        <p>${employersWithThat[i].MATRICULA}</p>
+                        <p>${employersWithThat[i].Nombre}</p>
+                        <div id="${employersWithThat[i].MATRICULA}" class="button button_informacion"> Ver informacion</div>
                     </div>
                 `
                 element_insert.appendChild(divContentUsers);
@@ -108,31 +110,32 @@
 
         matricula_employer.addEventListener('keyup', async (e) => {
             const find_employer_matricula = {
-                sql: `matricula`,
+                sql: `MATRICULA`,
                 value: e.target.value
             }
             await getAllUsers(find_employer_matricula, employers)
             if(employers.childNodes.length > 0){
                  const childs  = document.querySelectorAll('.button_informacion')
-                   for(child of childs){
-                child.addEventListener('click', () => {
-                    window.location.href = `/employer/:${child.getAttribute('id')}`
-                })
-                   }}
+                   childs.forEach(child => {
+                       child.addEventListener('click', () => {
+                           window.location.href = `/employer/${child.getAttribute('id')}`
+                       })
+                   })
+                }
         })
         name_employer.addEventListener('keyup', async (e) => {
             const find_employer_name =  {
-                sql:`name`,
+                sql:`Nombre`,
                 value: e.target.value
             }
             await getAllUsers(find_employer_name, employers)
             if(employers.childNodes.length > 0){
                 const childs = document.querySelectorAll('.button_informacion')
-                for(child of childs){
+                childs.forEach(child => {
                     child.addEventListener('click', () => {
-                    window.location.href = `/employer/${child.getAttribute('id')}`
+                        window.location.href = `/employer/${child.getAttribute('id')}`
+                    })
                 })
-                }
             }
         })
 

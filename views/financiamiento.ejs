@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+    <title>financiamiento</title>
+</head>
+<body>
+    <header class="header_dash">
+        <div class="container_list">
+            <ul id="user" data-user="<%= user %>" class="list_elements"  >
+                <li id="contend_user" data-token="<%= auth_token %>">
+                    username :
+                    <%= user %>
+                </li>
+                <li >
+                    email :
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1><%= title %></h1>
+
+    <form>
+        <h2>Filtra el finaciamiento</h2>
+        <div class="form_table">
+            <div class="container_form container_input_table">
+                <input
+                id="no_financiamiento"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Financiamiento</label>
+            </div>
+            <div class="container_form container_input_table">
+                <select id="entregado">
+                    <option value="null">
+                        Filtrar
+                    </option>
+                    <option value="1">
+                        Entregados
+                    </option>
+                    <option value="0">
+                        No Entregados
+                    </option>
+                </select>
+                <label> Busca por entregados</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="oficio_recepcion"
+                type="text"
+                required
+                >
+                <label for="">Busca por Oficio Recepcion</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="escritura"
+                type="text"
+                required
+                >
+                <label for="">Busca por Escritura</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="notaria"
+                type="text"
+                required
+                >
+                <label for="">Busca por Notaria</label>
+            </div>
+        </div>
+    </form>
+
+
+    <table border=" 1px solid black">
+        <thead>
+            <tr>
+                <th>No. financiamiento</th>
+                <th>Entregado</th>
+                <th>Orden</th>
+                <th>Oficio Recepcion</th>
+                <th>Fecha Oficio Recepcion</th>
+                <th>Fecha Recepcion</th>
+                <th>Escritura</th>
+                <th>Fecha Finaciamiento</th>
+                <th>Notaria</th>
+                <th>Tiempo Max Guardia</th>
+                <th>Oficio Entrega</th>
+                <th>Fecha Entrega</th>
+                <th>Dependencia</th>
+                <th>Matricula Empleado</th>
+                <th>Nombre del Empleado</th>
+            </tr>
+        </thead>
+        <% const fianciamiento = allFinanciamiento %>
+        <% const stringifyFinanciamientos = JSON.stringify(allFinanciamiento) %>
+
+        <tbody id="stringifyFinanciamientos" data-stringify="<%= stringifyFinanciamientos %>">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="15">Total de financiamientos: <%= allFinanciamiento.length %></td>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+
+
+        // filtar busqueda selects
+        const nofinanciamiento = document.getElementById('no_financiamiento');
+        const entregado = document.getElementById('entregado');
+        const oficioRecepcion = document.getElementById('oficio_recepcion');
+        const escritura = document.getElementById('escritura');
+        const notaria = document.getElementById('notaria');
+        const allFinanciamientos = document.getElementById('stringifyFinanciamientos');
+        const user = document.getElementById('user').dataset.user;
+        const token = document.getElementById('contend_user').dataset.token;
+
+        function initialFinaciamientos(ArrayContent){
+            let newArrayarray = JSON.parse(allFinanciamientos.dataset.stringify);
+            ArrayContent && (newArrayarray = ArrayContent);
+            let allData = newArrayarray.map((item) => {
+                const tr = document.createElement('tr');
+                const  td_financiamiento = document.createElement('td');
+                td_financiamiento.textContent = item.no_financiamiento;
+                tr.appendChild(td_financiamiento);
+                const td_entrega = document.createElement('td');
+                td_entrega.setAttribute('data-entrega', item.entrega)
+                td_entrega.setAttribute('class', 'entrega')
+                tr.appendChild(td_entrega);
+                const td_orden = document.createElement('td');
+                td_orden.setAttribute('data-orden', item.orden)
+                td_orden.setAttribute('class', 'orden')
+                tr.appendChild(td_orden);
+                const td_oficio_recepcion = document.createElement('td');
+                td_oficio_recepcion.textContent = item.oficio_recepcion;
+                tr.appendChild(td_oficio_recepcion);
+                const td_fecha_oficio_recepcion = document.createElement('td');
+                item.fecha_oficio_recepcion = new Date(item.fecha_oficio_recepcion);
+                td_fecha_oficio_recepcion.textContent = `${item.fecha_oficio_recepcion.getDate()}/${item.fecha_oficio_recepcion.getMonth() + 1}/${item.fecha_oficio_recepcion.getFullYear()}`;
+                tr.appendChild(td_fecha_oficio_recepcion);
+                const td_fecha_recepcion = document.createElement('td');
+                item.fecha_recepcion = new Date(item.fecha_recepcion);
+                td_fecha_recepcion.textContent = `${item.fecha_recepcion.getDate()}/${item.fecha_recepcion.getMonth() + 1}/${item.fecha_recepcion.getFullYear()}`;
+                tr.appendChild(td_fecha_recepcion);
+                const td_escritura = document.createElement('td');
+                td_escritura.textContent = item.escritura;
+                tr.appendChild(td_escritura);
+                const td_financiamiento_fecha = document.createElement('td');
+                item.financiamiento_fecha = new Date(item.financiamiento_fecha);
+                td_financiamiento_fecha.textContent = `${item.financiamiento_fecha.getDate()}/${item.financiamiento_fecha.getMonth() + 1}/${item.financiamiento_fecha.getFullYear()}`;
+                tr.appendChild(td_financiamiento_fecha);
+                const td_notaria = document.createElement('td');
+                td_notaria.textContent = item.notaria;
+                tr.appendChild(td_notaria);
+                const td_tiempo_guardia = document.createElement('td');
+                td_tiempo_guardia.textContent = item.tiempo_guardia;
+                tr.appendChild(td_tiempo_guardia);
+                const td_no_entrega_oficio = document.createElement('td');
+                td_no_entrega_oficio.textContent = item.no_entrega_oficio;
+                tr.appendChild(td_no_entrega_oficio);
+                const td_fecha_entrega_oficio = document.createElement('td');
+                item.fecha_entrega_oficio = new Date(item.fecha_entrega_oficio);
+                td_fecha_entrega_oficio.textContent = `${item.fecha_entrega_oficio.getDate()}/${item.fecha_entrega_oficio.getMonth() + 1}/${item.fecha_entrega_oficio.getFullYear()}`;
+                tr.appendChild(td_fecha_entrega_oficio);
+                const td_dependencia = document.createElement('td');
+                td_dependencia.textContent = item.dependencia;
+                tr.appendChild(td_dependencia);
+                const td_matricula = document.createElement('td');
+                const a_matricula = document.createElement('a');
+                a_matricula.setAttribute('href', `/employer/${item.MATRICULA}`);
+                a_matricula.textContent = item.MATRICULA;
+                td_matricula.appendChild(a_matricula);
+                tr.appendChild(td_matricula);
+                const td_nombre = document.createElement('td');
+                td_nombre.textContent = item.Nombre;
+                tr.appendChild(td_nombre);
+                if(user.includes('admin')){
+                    const td_editar = document.createElement('td');
+                    const a_editar = document.createElement('a');
+                    td_editar.setAttribute('class', 'button_informacion');
+                    a_editar.setAttribute('href', `/employer/${item.MATRICULA}`);
+                    a_editar.textContent = 'Editar';
+                    td_editar.appendChild(a_editar);
+                    tr.appendChild(td_editar);
+                }
+                return tr;
+            });
+            allData.forEach((item) => {
+                allFinanciamientos.appendChild(item);
+                textEntregado(document.querySelectorAll('.entrega'));
+                textOrden(document.querySelectorAll('.orden'));
+            })
+        }
+        initialFinaciamientos();
+
+        nofinanciamiento.addEventListener('keyup', async () => {
+            let value = nofinanciamiento.value
+            if(value.length > 0){
+                allFinanciamientos.innerHTML = '';
+                let result = await filterBy('no_financiamiento', value);
+                if(result.success === true){
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos(result.financiamiento_result);
+                }else{
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos();
+                }
+            }else{
+                allFinanciamientos.innerHTML = '';
+                initialFinaciamientos();
+            }
+        });
+
+        entregado.addEventListener('change', async () => {
+            let value = entregado.value
+            if(value !== "null"){
+                allFinanciamientos.innerHTML = '';
+                let result = await filterBy('entrega', value);
+                if(result.success === true){
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos(result.financiamiento_result);
+                }else{
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos();
+                }
+            }else{
+                allFinanciamientos.innerHTML = '';
+                initialFinaciamientos();
+            }
+        })
+
+        oficioRecepcion.addEventListener('keyup', async() => {
+            let value = oficioRecepcion.value
+            if(value.length > 0){
+                allFinanciamientos.innerHTML = '';
+                let result = await filterBy('oficio_recepcion', value);
+                if(result.success === true){
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos(result.financiamiento_result);
+                }else{
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos();
+                }
+            }else{
+                allFinanciamientos.innerHTML = '';
+                initialFinaciamientos();
+            }
+        })
+
+        escritura.addEventListener('keyup', async () => {
+            let value = escritura.value;
+            if(value.length > 0){
+                allFinanciamientos.innerHTML = '';
+                let result = await filterBy('escritura', value);
+                if(result.success === true){
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos(result.financiamiento_result);
+                }else{
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos();
+                }
+            }else{
+                allFinanciamientos.innerHTML = '';
+                initialFinaciamientos();
+            }
+        })
+        notaria.addEventListener('keyup', async () => {
+            let value = notaria.value;
+            if(value.length > 0){
+                allFinanciamientos.innerHTML = '';
+                let result = await filterBy('notaria', value);
+                if(result.success === true){
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos(result.financiamiento_result);
+                }else{
+                    allFinanciamientos.innerHTML = '';
+                    initialFinaciamientos();
+                }
+            }else{
+                allFinanciamientos.innerHTML = '';
+                initialFinaciamientos();
+            }
+        })
+
+        async function filterBy(param, value){
+            const response = await fetch(`/financiamiento_escrituras/filterby/${param}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({value: value})
+            });
+            const data = await response.json();
+            return data;
+        }
+        function textEntregado(arrayEntregado){
+            arrayEntregado.forEach((item) => {
+                if(item.dataset.entrega === '1'){
+                    item.textContent = 'Entregado';
+                }else{
+                    item.textContent = 'No entregado';
+                }
+            })
+        }
+        function textOrden(arrayOrden){
+            arrayOrden.forEach((item) => {
+                if(item.dataset.orden === '0'){
+                    item.textContent = 'Ya fue Entregado';
+                }else{
+                    item.textContent = item.dataset.orden;
+                }
+            })
+        }
+    </script>
+</body>
+</html>

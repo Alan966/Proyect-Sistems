@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header_dash">
+        <div class="container_img">
+        </div>
+        <div class="container_list">
+            <ul id="user" data-user="<%= user %>" class="list_elements"  >
+                <li id="contend_user" data-token="<%= auth_token %>">
+                    username :
+                    <%= user %>
+                </li>
+                <li >
+                    email :
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1><%= title %></h1>
+
+    <form>
+        <h1>Filtra los Pagares de Vehiculos</h1>
+        <div class="form_table">
+            <div class="container_form container_input_table">
+                <input
+                id="no_pagare"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Pagare de Vehiculos</label>
+            </div>
+            <div class="container_form container_input_table">
+                <select id="entregado">
+                    <option value="null">
+                        Filtrar
+                    </option>
+                    <option value="1">
+                        Entregados
+                    </option>
+                    <option value="0">
+                        No Entregados
+                    </option>
+                </select>
+                <label> Busca por entregados</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="no_oficio"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Oficio</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="no_solicitud"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Solicitud</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="no_factura"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Factura</label>
+            </div>
+        </div>
+    </form>
+    <table border="1px solid black">
+        <thead>
+           <tr>
+            <th>No. de Pagare Vehiculos</th>
+            <th>Entregado</th>
+            <th>Orden</th>
+            <th>Fecha de Recepcion</th>
+            <th>No. Oficio</th>
+            <th>No. solicitud</th>
+            <th>Fecha de Solicitud</th>
+            <th>Fecha de Entrega</th>
+            <th>Destino</th>
+            <th>No. Factura</th>
+            <th>Matricula Empleado</th>
+            <th>Nombre Empleado</th>
+           </tr>
+        </thead>
+        <% const stringifyPagaresVehiculos = JSON.stringify(allPagaresVehiculos) %>
+        <tbody id="stringifyPagaresVehiculos" data-stringify="<%= stringifyPagaresVehiculos %>">
+        </tbody>
+        <tFoot>
+            <tr>
+                <td colspan="12">Total de Pagares Vehiculos: <%= allPagaresVehiculos.length %></td>
+            </tr>
+        </tFoot>
+    </table>
+
+    <script>
+        const allPagaresVehiculos = document.getElementById('stringifyPagaresVehiculos')
+        const user = document.getElementById('user').dataset.user;
+        const token = document.getElementById('contend_user').dataset.token;
+
+        //select
+        const no_pagare = document.getElementById('no_pagare');
+        const entregado = document.getElementById('entregado');
+        const no_oficio = document.getElementById('no_oficio');
+        const no_solicitud = document.getElementById('no_solicitud');
+        const no_factura = document.getElementById('no_factura');
+
+        const textEntregado = (array) => {
+            array.forEach((item) => {
+                if (item.dataset.entregado === "1") {
+                    item.textContent = 'Entregado';
+                } else {
+                    item.textContent = 'No Entregado';
+                }
+            })
+        }
+        const textOrden = (array) => {
+            array.forEach((item) => {
+                if (item.dataset.orden === "0") {
+                    item.textContent = 'Ya fue entregado';
+                } else {
+                    item.textContent = item.dataset.orden;
+                }
+            })
+        }
+        function initialPagaresVehiculos(newArrayBy){
+            let newArrayByPagares = JSON.parse(allPagaresVehiculos.dataset.stringify);
+            newArrayBy && (newArrayByPagares = newArrayBy)
+            let alldata = newArrayByPagares.map((item) => {
+                const tr = document.createElement('tr');
+                const td_no_pagare = document.createElement('td');
+                td_no_pagare.textContent = item.no_pagare;
+                tr.appendChild(td_no_pagare);
+                const td_entregado = document.createElement('td');
+                td_entregado.setAttribute('class', 'entregado');
+                td_entregado.setAttribute('data-entregado', item.entregado);
+                tr.appendChild(td_entregado);
+                const td_orden = document.createElement('td');
+                td_orden.setAttribute('class', 'orden');
+                td_orden.setAttribute('data-orden', item.orden);
+                tr.appendChild(td_orden);
+                const td_fecha_recepcion = document.createElement('td');
+                item.fecha_recepcion = new Date(item.fecha_recepcion);
+                td_fecha_recepcion.textContent = `${item.fecha_recepcion.getDate()}/${item.fecha_recepcion.getMonth() + 1}/${item.fecha_recepcion.getFullYear()}`;
+                tr.appendChild(td_fecha_recepcion);
+                const td_no_oficio = document.createElement('td');
+                td_no_oficio.textContent = item.no_oficio;
+                tr.appendChild(td_no_oficio);
+                const td_no_solicitud = document.createElement('td');
+                td_no_solicitud.textContent = item.no_solicitud;
+                tr.appendChild(td_no_solicitud);
+                const td_fecha_solicitud = document.createElement('td');
+                item.fecha_solicitud = new Date(item.fecha_solicitud);
+                td_fecha_solicitud.textContent = `${item.fecha_solicitud.getDate()}/${item.fecha_solicitud.getMonth() + 1}/${item.fecha_solicitud.getFullYear()}`;
+                tr.appendChild(td_fecha_solicitud);
+                const td_fecha_entrega = document.createElement('td');
+                item.fecha_entrega = new Date(item.fecha_entrega);
+                td_fecha_entrega.textContent = `${item.fecha_entrega.getDate()}/${item.fecha_entrega.getMonth() + 1}/${item.fecha_entrega.getFullYear()}`;
+                tr.appendChild(td_fecha_entrega);
+                const td_destino = document.createElement('td');
+                td_destino.textContent = item.destino;
+                tr.appendChild(td_destino);
+                const td_no_factura = document.createElement('td');
+                td_no_factura.textContent = item.no_factura;
+                tr.appendChild(td_no_factura);
+                const td_matricula = document.createElement('td');
+                const a_matricula = document.createElement('a');
+                a_matricula.setAttribute('href', `/employer/${item.MATRICULA}`);
+                a_matricula.textContent = item.MATRICULA;
+                td_matricula.appendChild(a_matricula);
+                tr.appendChild(td_matricula);
+                const td_name = document.createElement('td');
+                td_name.textContent = item.Nombre;
+                tr.appendChild(td_name);
+                if(user.includes('admin')){
+                    const td_edit = document.createElement('td');
+                    const a_edit = document.createElement('a');
+                    td_edit.setAttribute('class', 'button_informacion');
+                    a_edit.setAttribute('href', `/employer/${item.MATRICULA}`);
+                    a_edit.textContent = 'Editar';
+                    td_edit.appendChild(a_edit);
+                    tr.appendChild(td_edit);
+                }
+                return tr;
+            })
+
+            alldata.forEach((item) => {
+                allPagaresVehiculos.appendChild(item);
+                textEntregado(document.querySelectorAll('.entregado'));
+                textOrden(document.querySelectorAll('.orden'));
+            })
+        }
+        initialPagaresVehiculos();
+
+        no_pagare.addEventListener('keyup', async () => {
+            let value = no_pagare.value;
+            if(value.length > 0){
+                allPagaresVehiculos.innerHTML = '';
+                const result = await getPagaresVehiculosBy('no_pagare', value);
+                if(result.success){
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos(result.pagares_vehiculos_result);
+                }else{
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos();
+                }
+            }else{
+                allPagaresVehiculos.innerHTML = '';
+                initialPagaresVehiculos();
+            }
+        });
+
+        entregado.addEventListener('change', async () => {
+            let value = entregado.value;
+            if(value !== "null"){
+                allPagaresVehiculos.innerHTML = '';
+                const result = await getPagaresVehiculosBy('entregado', value);
+                console.log(result);
+                if(result.success){
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos(result.pagares_vehiculos_result);
+                }else{
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos();
+                }
+            }else{
+                allPagaresVehiculos.innerHTML = '';
+                initialPagaresVehiculos();
+            }
+        });
+
+        no_oficio.addEventListener('keyup', async () => {
+            let value = no_oficio.value;
+            if(value.length > 0){
+                allPagaresVehiculos.innerHTML = '';
+                const result = await getPagaresVehiculosBy('no_oficio', value);
+                if(result.success){
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos(result.pagares_vehiculos_result);
+                }else{
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos();
+                }
+            }else{
+                allPagaresVehiculos.innerHTML = '';
+                initialPagaresVehiculos();
+            }
+        });
+
+        no_solicitud.addEventListener('keyup', async () => {
+            let value = no_solicitud.value;
+            if(value.length > 0){
+                allPagaresVehiculos.innerHTML = '';
+                const response = await getPagaresVehiculosBy('no_solicitud', value);
+                if(response.success){
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos(response.pagares_vehiculos_result);
+                }else{
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos();
+                }
+            }else{
+                allPagaresVehiculos.innerHTML = '';
+                initialPagaresVehiculos();
+            }
+        });
+
+        no_factura.addEventListener('keyup', async() => {
+            let value = no_factura.value;
+            if(value.length > 0){
+                allPagaresVehiculos.innerHTML = '';
+                const result = await getPagaresVehiculosBy('no_factura', value);
+                if(result.success){
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos(result.pagares_vehiculos_result);
+                }else{
+                    allPagaresVehiculos.innerHTML = '';
+                    initialPagaresVehiculos();
+                }
+            }else{
+                allPagaresVehiculos.innerHTML = '';
+                initialPagaresVehiculos();
+            }
+        });
+
+    async function getPagaresVehiculosBy(param, value){
+        const response = await fetch(`/pagaresVehiculos/filterby/${param}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({value})
+        })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            console.log(err);
+            return err;
+        })
+
+        return response;
+    }
+    </script>
+</body>
+</html>

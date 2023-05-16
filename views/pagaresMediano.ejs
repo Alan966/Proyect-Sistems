@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header_dash">
+        <div class="container_img">
+        </div>
+        <div id="user" data-user="<%= user %>" class="container_list">
+            <ul class="list_elements"  >
+                <li id="contend_user" data-token="<%= auth_token %>">
+                    username :
+                    <%= user %>
+                </li>
+                <li >
+                    email :
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1><%= title %></h1>
+    <form>
+        <h1>Filtra los Gastos de Escrituracion</h1>
+        <div class="form_table">
+            <div class="container_form container_input_table">
+                <input
+                id="no_pagaresMediano"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Pagare Mediano</label>
+            </div>
+            <div class="container_form container_input_table">
+                <select id="entregado">
+                    <option value="null">
+                        Filtrar
+                    </option>
+                    <option value="1">
+                        Entregados
+                    </option>
+                    <option value="0">
+                        No Entregados
+                    </option>
+                </select>
+                <label> Busca por entregados</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="oficio_recepcion"
+                type="text"
+                required
+                >
+                <label for="">Busca por Oficio Recepcion</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="oficio_entrega"
+                type="text"
+                required
+                >
+                <label for="">Busca por Oficio Entrega</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="destino"
+                type="text"
+                required
+                >
+                <label for="">Busca por Destino</label>
+            </div>
+        </div>
+    </form>
+    <table border="1px solid black">
+        <thead>
+            <th>No. de Pagares Mediano</th>
+            <th>Entregado</th>
+            <th>Orden</th>
+            <th>fecha Recepcion</th>
+            <th>Oficio Recepcion</th>
+            <th>Fecha Oficio Recepcion</th>
+            <th>Fecha Pagare</th>
+            <th>Fecha contrato</th>
+            <th>Oficio Entrega</th>
+            <th>Fecha Entrega Oficio</th>
+            <th>Fecha Entrega</th>
+            <th>Destino</th>
+            <th>Matricula Empleado</th>
+            <th>Nombre Empleado</th>
+        </thead>
+        <% const stringifyParages = JSON.stringify(allPagaresMediano) %>
+        <tbody id="stringifyParages" data-stringify="<%= stringifyParages %>">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="14">Total de pagares: <%= allPagaresMediano.length %></td>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+
+        //selectors
+        const user = document.getElementById('user').dataset.user;
+        const token = document.getElementById('contend_user').dataset.token;
+        const allPagaresMediano = document.getElementById('stringifyParages');
+        const no_pagaresMediano = document.getElementById('no_pagaresMediano');
+        const entregado = document.getElementById('entregado');
+        const oficio_recepcion = document.getElementById('oficio_recepcion');
+        const oficio_entrega = document.getElementById('oficio_entrega');
+        const destino = document.getElementById('destino');
+
+        function textEntregado(arrayEntregado){
+            arrayEntregado.forEach((entregado) => {
+                if(entregado.dataset.entregada == '1'){
+                    entregado.textContent = 'Entregado';
+                }else{
+                    entregado.textContent = 'No entregado';
+                }
+            })
+        }
+        function textOrden(arrayOrden){
+            arrayOrden.forEach((orden) => {
+                if(orden.dataset.orden === '0'){
+                    orden.textContent = 'Ya ha sido entregado';
+                }else{
+                    orden.textContent = orden.dataset.orden;
+                }
+            })
+        }
+        function initialPagaresMediano(newArrayByPagare){
+            let newArrayByPagares = JSON.parse(allPagaresMediano.dataset.stringify);
+            newArrayByPagare && (newArrayByPagares = newArrayByPagare);
+            let allFinanciamiento = newArrayByPagares.map((item) => {
+                const tr = document.createElement('tr');
+                const tr_no_pagaresMediano = document.createElement('td');
+                tr_no_pagaresMediano.textContent = item.no_pagaresMediano;
+                tr.appendChild(tr_no_pagaresMediano);
+                const td_entregado = document.createElement('td');
+                td_entregado.setAttribute('class', 'entregado');
+                td_entregado.setAttribute('data-entregada', item.entregado);
+                tr.appendChild(td_entregado);
+                const td_orden = document.createElement('td');
+                td_orden.setAttribute('class', 'orden');
+                td_orden.setAttribute('data-orden', item.orden);
+                tr.appendChild(td_orden);
+                const td_fecha_recepcion = document.createElement('td');
+                item.fecha_recepcion = new Date(item.fecha_recepcion);
+                td_fecha_recepcion.textContent = `${item.fecha_recepcion.getDate()}/${item.fecha_recepcion.getMonth() + 1}/${item.fecha_recepcion.getFullYear()}`;
+                tr.appendChild(td_fecha_recepcion);
+                const td_oficio_recepcion = document.createElement('td');
+                td_oficio_recepcion.textContent = item.oficio_recepcion;
+                tr.appendChild(td_oficio_recepcion);
+                const td_fecha_recepcion_oficio = document.createElement('td');
+                item.fecha_recepcion_oficio = new Date(item.fecha_recepcion_oficio);
+                td_fecha_recepcion_oficio.textContent = `${item.fecha_recepcion_oficio.getDate()}/${item.fecha_recepcion_oficio.getMonth() + 1}/${item.fecha_recepcion_oficio.getFullYear()}`;
+                tr.appendChild(td_fecha_recepcion_oficio);
+                const td_fecha_pagare = document.createElement('td');
+                item.fecha_pagare = new Date(item.fecha_pagare);
+                td_fecha_pagare.textContent = `${item.fecha_pagare.getDate()}/${item.fecha_pagare.getMonth() + 1}/${item.fecha_pagare.getFullYear()}`;
+                tr.appendChild(td_fecha_pagare);
+                const td_fecha_contrato = document.createElement('td');
+                item.fecha_contrato = new Date(item.fecha_contrato);
+                td_fecha_contrato.textContent = `${item.fecha_contrato.getDate()}/${item.fecha_contrato.getMonth() +1}/${item.fecha_contrato.getFullYear()}`;
+                tr.appendChild(td_fecha_contrato);
+                const td_oficio_entrega = document.createElement('td');
+                td_oficio_entrega.textContent = item.oficio_entrega;
+                tr.appendChild(td_oficio_entrega);
+                const td_fecha_entrega_oficio = document.createElement('td');
+                item.fecha_entrega_oficio = new Date(item.fecha_entrega_oficio);
+                td_fecha_entrega_oficio.textContent = `${item.fecha_entrega_oficio.getDate()}/${item.fecha_entrega_oficio.getMonth() +1}/${item.fecha_entrega_oficio.getFullYear()}`;
+                tr.appendChild(td_fecha_entrega_oficio);
+                const td_fecha_entrega = document.createElement('td');
+                item.fecha_entrega = new Date(item.fecha_entrega);
+                td_fecha_entrega.textContent = `${item.fecha_entrega.getDate()}/${item.fecha_entrega.getMonth()}/${item.fecha_entrega.getFullYear()}`;
+                tr.appendChild(td_fecha_entrega);
+                const td_destino = document.createElement('td');
+                td_destino.textContent = item.destino;
+                tr.appendChild(td_destino);
+                const td_matricula = document.createElement('td');
+                const a_matricula = document.createElement('a');
+                a_matricula.setAttribute('href', `/employer/${item.MATRICULA}`);
+                a_matricula.textContent = item.MATRICULA;
+                td_matricula.appendChild(a_matricula);
+                tr.appendChild(td_matricula);
+                const td_name = document.createElement('td');
+                td_name.textContent = item.Nombre;
+                tr.appendChild(td_name);
+                if(user.includes('admin')){
+                    const td_edit = document.createElement('td');
+                    const a_edit = document.createElement('a');
+                    td_edit.setAttribute('class', 'button_informacion');
+                    a_edit.setAttribute('href', `/employer/${item.MATRICULA}`);
+                    a_edit.textContent = 'Editar';
+                    td_edit.appendChild(a_edit);
+                    tr.appendChild(td_edit);
+                }
+                return tr;
+            })
+            allFinanciamiento.forEach((item) => {
+                allPagaresMediano.appendChild(item);
+                textEntregado(document.querySelectorAll('.entregado'));
+                textOrden(document.querySelectorAll('.orden'));
+            })
+        }
+        initialPagaresMediano();
+
+        no_pagaresMediano.addEventListener('keyup', async() => {
+            let value = no_pagaresMediano.value;
+            if(value.length > 0){
+                allPagaresMediano.innerHTML = '';
+                const result = await getPagaresMedianoBy('no_pagaresMediano', value);
+                console.log(result);
+                if(result.success){
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano(result.pagares_mediano_result)
+                }else{
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano();
+                }
+            }else{
+                allPagaresMediano.innerHTML = '';
+                initialPagaresMediano();
+            }
+        })
+
+        entregado.addEventListener('change', async () => {
+            let value = entregado.value;
+            if(value !== "null"){
+                allPagaresMediano.innerHTML = '';
+                const result = await getPagaresMedianoBy('entregado', value);
+                if(result.success){
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano(result.pagares_mediano_result)
+                }else{
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano();
+                }
+            }else{
+                allPagaresMediano.innerHTML = '';
+                initialPagaresMediano();
+            }
+        });
+
+        oficio_recepcion.addEventListener('keyup', async () => {
+            let value = oficio_recepcion.value;
+            if(value.length > 0){
+                allPagaresMediano.innerHTML = '';
+                const result = await getPagaresMedianoBy('oficio_recepcion', value);
+                if(result.success){
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano(result.pagares_mediano_result)
+                }else{
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano();
+                }
+            }else{
+                allPagaresMediano.innerHTML = '';
+                initialPagaresMediano();
+            }
+        });
+
+        oficio_entrega.addEventListener('keyup', async() => {
+            let value = oficio_entrega.value;
+            if(value.length > 0){
+                allPagaresMediano.innerHTML = '';
+                const result = await getPagaresMedianoBy('oficio_entrega', value);
+                if(result.success){
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano(result.pagares_mediano_result)
+                }else{
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano();
+                }
+            }else{
+                allPagaresMediano.innerHTML = '';
+                initialPagaresMediano();
+            }
+        });
+
+        destino.addEventListener('keyup', async () => {
+            let value = destino.value;
+            if(value.length > 0){
+                allPagaresMediano.innerHTML = '';
+                const response = await getPagaresMedianoBy('destino', value);
+                if(response.success){
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano(response.pagares_mediano_result)
+                }else{
+                    allPagaresMediano.innerHTML = '';
+                    initialPagaresMediano();
+                }
+            }else{
+                allPagaresMediano.innerHTML = '';
+                initialPagaresMediano();
+            }
+        });
+
+    async function getPagaresMedianoBy(param, value){
+        const response = await fetch(`/pagaresMediano/filterby/${param}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({value})
+        })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            console.log(err);
+            return null;
+        })
+        return response;
+    }
+    </script>
+</body>
+</html>

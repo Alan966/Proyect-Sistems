@@ -41,7 +41,7 @@ const signin = async (req, res) => {
 
     res.cookie('auth_token', auth_token, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 36000000 // 10 hours
     })
     res
@@ -49,6 +49,7 @@ const signin = async (req, res) => {
     .json({
         success: true,
         message: 'Go to Dashboard',
+        auth_token
     })
     return;
 }

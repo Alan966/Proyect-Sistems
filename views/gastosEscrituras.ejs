@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header_dash">
+        <div class="container_list">
+            <ul id="user" class="list_elements" data-user="<%= user %>">
+                <li id="contend_user" data-token="<%= auth_token %>">
+                    username :
+                    <%= user %>
+                </li>
+                <li>
+                    email :
+                    <%= email %>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <h1><%=  title %></h1>
+
+    <form>
+        <h1>Filtra los Gastos de Escrituracion</h1>
+        <div class="form_table">
+            <div class="container_form container_input_table">
+                <input
+                id="no_escrituracion"
+                type="text"
+                required
+                >
+                <label for="">Busca por No. de Escrituracion</label>
+            </div>
+            <div class="container_form container_input_table">
+                <select id="entregado">
+                    <option value="null">
+                        Filtrar
+                    </option>
+                    <option value="1">
+                        Entregados
+                    </option>
+                    <option value="0">
+                        No Entregados
+                    </option>
+                </select>
+                <label> Busca por entregados</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="oficio_recepcion"
+                type="text"
+                required
+                >
+                <label for="">Busca por Oficio Recepcion</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="oficio_entrega"
+                type="text"
+                required
+                >
+                <label for="">Busca por Oficio Entrega</label>
+            </div>
+            <div class="container_form container_input_table">
+                <input
+                id="destino"
+                type="text"
+                required
+                >
+                <label for="">Busca por Destino</label>
+            </div>
+        </div>
+    </form>
+
+    <table border="1px solid black">
+        <thead>
+            <tr>
+                <th>No. de Escrituracion</th>
+                <th>Entregado</th>
+                <th>Orden</th>
+                <th>Fecha Recepcion</th>
+                <th>Oficio Recepcion</th>
+                <th>Fecha recepcion Oficio</th>
+                <th>Fecha pagare</th>
+                <th>Fecha contrato</th>
+                <th>Oficio Entrega</th>
+                <th>Fecha entrega oficio</th>
+                <th>Fecha entrega</th>
+                <th>destino</th>
+                <th>Matricula del cliente</th>
+                <th>Nombre del cliente</th>
+            </tr>
+        </thead>
+        <% const stringifyGastos =  JSON.stringify(allGastosEscrituras)%>
+        <tbody id="stringifyGastos" data-stringity="<%= stringifyGastos %>">
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="15">Total de financiamientos: <%= allGastosEscrituras.length %></td>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+
+        const allGastosEscrituracion = document.getElementById('stringifyGastos');
+        const user = document.getElementById('user').dataset.user;
+        const token = document.getElementById('contend_user').dataset.token;
+        // filtrar busqueda selects
+        const no_escrituracion = document.getElementById('no_escrituracion');
+        const entregado = document.getElementById('entregado');
+        const oficio_recepcion = document.getElementById('oficio_recepcion');
+        const oficio_entrega = document.getElementById('oficio_entrega');
+        const destino = document.getElementById('destino');
+
+        function initialGastosEscrituracion(arraybyFilter){
+            let newArrayByGastos = JSON.parse(allGastosEscrituracion.dataset.stringity);
+            arraybyFilter && (newArrayByGastos = arraybyFilter);
+            let allGastos = newArrayByGastos.map((item) => {
+                const tr = document.createElement('tr');
+                const td_no_escrituracion = document.createElement('td');
+                td_no_escrituracion.textContent = item.no_escrituracion;
+                tr.appendChild(td_no_escrituracion);
+                const td_entregado = document.createElement('td');
+                td_entregado.setAttribute('class', 'entregado');
+                td_entregado.setAttribute('data-entregada', item.entregado);
+                tr.appendChild(td_entregado);
+                const td_orden = document.createElement('td');
+                td_orden.setAttribute('class', 'orden');
+                td_orden.setAttribute('data-orden', item.orden);
+                tr.appendChild(td_orden);
+                const td_fecha_recepcion = document.createElement('td');
+                item.fecha_recepcion = new Date(item.fecha_recepcion);
+                td_fecha_recepcion.textContent = `${item.fecha_recepcion.getDate()}/${item.fecha_recepcion.getMonth() + 1}/${item.fecha_recepcion.getFullYear()}`;
+                tr.appendChild(td_fecha_recepcion);
+                const td_oficio_recepcion = document.createElement('td');
+                td_oficio_recepcion.textContent = item.no_oficio_recepcion;
+                tr.appendChild(td_oficio_recepcion);
+                const td_fecha_recepcion_oficio = document.createElement('td');
+                item.fecha_oficio_recepcion = new Date(item.fecha_oficio_recepcion);
+                td_fecha_recepcion_oficio.textContent = `${item.fecha_oficio_recepcion.getDate()}/${item.fecha_oficio_recepcion.getMonth() + 1}/${item.fecha_oficio_recepcion.getFullYear()}`;
+                tr.appendChild(td_fecha_recepcion_oficio);
+                const td_fecha_pagare = document.createElement('td');
+                item.fecha_pagare = new Date(item.fecha_pagare);
+                td_fecha_pagare.textContent = `${item.fecha_pagare.getDate()}/${item.fecha_pagare.getMonth() + 1}/${item.fecha_pagare.getFullYear()}`;
+                tr.appendChild(td_fecha_pagare);
+                const td_fecha_contrato = document.createElement('td');
+                item.fecha_contrato = new Date(item.fecha_contrato);
+                td_fecha_contrato.textContent = `${item.fecha_contrato.getDate()}/${item.fecha_contrato.getMonth() +1}/${item.fecha_contrato.getFullYear()}`;
+                tr.appendChild(td_fecha_contrato);
+                const td_oficio_entrega = document.createElement('td');
+                td_oficio_entrega.textContent = item.no_oficio_entrega;
+                tr.appendChild(td_oficio_entrega);
+                const td_fecha_entrega_oficio = document.createElement('td');
+                item.fecha_oficio_entrega = new Date(item.fecha_oficio_entrega);
+                td_fecha_entrega_oficio.textContent = `${item.fecha_oficio_entrega.getDate()}/${item.fecha_oficio_entrega.getMonth() +1}/${item.fecha_oficio_entrega.getFullYear()}`;
+                tr.appendChild(td_fecha_entrega_oficio);
+                const td_fecha_entrega = document.createElement('td');
+                item.fecha_entrega = new Date(item.fecha_entrega);
+                td_fecha_entrega.textContent = `${item.fecha_entrega.getDate()}/${item.fecha_entrega.getMonth()}/${item.fecha_entrega.getFullYear()}`;
+                tr.appendChild(td_fecha_entrega);
+                const td_destino = document.createElement('td');
+                td_destino.textContent = item.destino;
+                tr.appendChild(td_destino);
+                const td_matricula = document.createElement('td');
+                const a_matricula = document.createElement('a');
+                a_matricula.setAttribute('href', `/employer/${item.MATRICULA}`);
+                a_matricula.textContent = item.MATRICULA;
+                td_matricula.appendChild(a_matricula);
+                tr.appendChild(td_matricula);
+                const td_name = document.createElement('td');
+                td_name.textContent = item.Nombre;
+                tr.appendChild(td_name);
+                if(user.includes('admin')){
+                    const td_edit = document.createElement('td');
+                    const a_edit = document.createElement('a');
+                    td_edit.setAttribute('class', 'button_informacion');
+                    a_edit.setAttribute('href', `/employer/${item.MATRICULA}`);
+                    a_edit.textContent = 'Editar';
+                    td_edit.appendChild(a_edit);
+                    tr.appendChild(td_edit);
+                }
+                return tr;
+            })
+
+            allGastos.forEach((gasto) => {
+                allGastosEscrituracion.appendChild(gasto);
+                textEntregado(document.querySelectorAll('.entregado'));
+                textOrden(document.querySelectorAll('.orden'));
+            })
+        }
+
+        initialGastosEscrituracion();
+
+        no_escrituracion.addEventListener('keyup', async (e) => {
+            let value = no_escrituracion.value;
+            if(value.length > 0){
+                allGastosEscrituracion.innerHTML = '';
+                let result = await  filterGastosBy('no_escrituracion', value);
+                if(result.success){
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion(result.gastos_escrituras_result);
+                }else{
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion();
+                }
+            }else{
+                allGastosEscrituracion.innerHTML = '';
+                initialGastosEscrituracion();
+            }
+        });
+
+        entregado.addEventListener('change', async() => {
+            let value = entregado.value;
+            if(value !== "null"){
+                allGastosEscrituracion.innerHTML = '';
+                let result = await filterGastosBy('entregado', value);
+                if(result.success){
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion(result.gastos_escrituras_result);
+                }else{
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion();
+                }
+            }else{
+                allGastosEscrituracion.innerHTML = '';
+                initialGastosEscrituracion();
+            }
+        });
+
+        oficio_recepcion.addEventListener('keyup', async() => {
+            let value = oficio_recepcion.value;
+            if(value.length > 0){
+                allGastosEscrituracion.innerHTML = '';
+                const result = await filterGastosBy('no_oficio_recepcion', value);
+                if(result.success){
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion(result.gastos_escrituras_result);
+                }else{
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion();
+                }
+            }else{
+                allGastosEscrituracion.innerHTML = '';
+                initialGastosEscrituracion();
+            }
+        });
+
+        oficio_entrega.addEventListener('keyup', async() => {
+            let value = oficio_entrega.value;
+            if(value.length > 0){
+                allGastosEscrituracion.innerHTML = '';
+                const result = await filterGastosBy('no_oficio_entrega', value);
+                if(result.success){
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion(result.gastos_escrituras_result);
+                }else{
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion();
+                }
+            }else{
+                allGastosEscrituracion.innerHTML = '';
+                initialGastosEscrituracion();
+            }
+        });
+
+        destino.addEventListener('keyup', async() => {
+            let value = destino.value;
+            if(value.length > 0){
+                allGastosEscrituracion.innerHTML = '';
+                const result = await filterGastosBy('destino', value);
+                if(result.success){
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion(result.gastos_escrituras_result);
+                }else{
+                    allGastosEscrituracion.innerHTML = '';
+                    initialGastosEscrituracion();
+                }
+            }else{
+                allGastosEscrituracion.innerHTML = '';
+                initialGastosEscrituracion();
+            }
+        });
+
+        function textEntregado(arrayEntregado){
+            arrayEntregado.forEach((entregado) => {
+                if(entregado.dataset.entregada == '1'){
+                    entregado.textContent = 'Entregado';
+                }else{
+                    entregado.textContent = 'No entregado';
+                }
+            })
+        }
+        function textOrden(arrayOrden){
+            arrayOrden.forEach((orden) => {
+                if(orden.dataset.orden === '0'){
+                    orden.textContent = 'Ya ha sido entregado';
+                }else{
+                    orden.textContent = orden.dataset.orden;
+                }
+            })
+        }
+
+    async function filterGastosBy(param, value){
+            const result = await fetch(`/gastosEscrituras/filterby/${param}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({value})
+            })
+            .then(result => {
+                return result.json();
+            })
+            .catch(err => {
+                console.log(err);
+                return null;
+            })
+            return result;
+        }
+    </script>
+</body>
+</html>

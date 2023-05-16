@@ -1,29 +1,33 @@
 const MySQL = require('../../connection');
-
-
-const getEmployer = async (req, res) => {
-    const matricula = req.params.matricula.replace(/:/g, "")
+const getEmployer = async  (req, res) => {
+    const matricula = req.params.matricula;
     const pool = await MySQL.getPool();
-    const findUser = await pool.query('SELECT * FROM empleados WHERE matricula = ?', [matricula])
+    const findEmployer = await pool.query('SELECT * FROM empleados WHERE MATRICULA = ?', [matricula])
     const dataBases = [
-        'finaciamiento_escritura',
-        'gatos_escrituracion',
+        'gastos_escritura',
+        'gastos_escrituracion',
         'pagares_mediano',
         'pagares_vehiculos'
     ];
-    let prestamos = [];
-    for(i = 0; i < dataBases.length; i++){
-        const findServicesUser = await pool.query(`SELECT * FROM ${dataBases[i]} WHERE matricula_clie = ?`, [matricula])
-        if(findServicesUser[0].length > 0){
-            findServicesUser[0][0].type = dataBases[i]
-            prestamos.push(findServicesUser[0][0])
+    let allPrestamos = new Map();
+    let counter = 1
+    for(let i = 0; i < dataBases.length; i++){
+        const findServicesUser = await pool.query(`SELECT * FROM ${dataBases[i]} WHERE MATRICULA = ?`, [matricula])
+        for(service of findServicesUser[0]){
+            allPrestamos.set(`${dataBases[i]}${counter++}`, service)
         }
     }
+
+   const user = req.user;
+   const auth_cookie = req.auth_token;
     res
     .status(200)
     .render('employer', {
-        prestamos,
-        user: findUser[0]
+        allPrestamos,
+        employer: findEmployer[0],
+        user: user.nameacount,
+        email: user.email,
+        auth_token: auth_cookie
     })
 }
 
