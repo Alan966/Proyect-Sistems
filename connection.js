@@ -5,6 +5,7 @@ dotenv.config();
 const { dev, prod } = require('./config');
 
 let config = prod;
+console.log(config);
 
 const pool = mysql.createPool(config);
 
