@@ -33,7 +33,7 @@ app.use(cookieParser());
 
 // routes
 app.get('/', (req, res) => {
-    res.render('index', {title: 'Sistems Proyect'})
+    res.render('index', {title: 'Sistema de Recusos Humanos'})
 })
 app
 const KunauthenticatedPaths = new Set([
@@ -92,7 +92,7 @@ app.get('/styles.css', function(req, res) {
     res.sendFile(__dirname + '/styles.css');
   });
 app.use('/signin', signinRoutes);
-app.use('/signup', signupRoutes);
+// app.use('/signup', signupRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/getValuesEmpleado', routerFindUsers);
 app.use('/notarias', routerNotarias);

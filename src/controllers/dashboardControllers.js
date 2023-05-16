@@ -7,7 +7,7 @@ const getDashboard = async (req, res) => {
 
     const name = user.nameacount;
     const email = user.email;
-    res.render('dashboard', {title: 'Dashboard', name, email,
+    res.render('dashboard', {title: 'Centro Principal de Prestamos', name, email,
     token: auth_cookie })
 }
 
