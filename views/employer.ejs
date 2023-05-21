@@ -357,7 +357,7 @@
 
     function textEntregado(Parent){
     for(entregado of Parent){
-        if(entregado.dataset.entrega === '0'){
+        if(entregado.dataset.entregado === '0'){
         entregado.textContent = 'No entregado';
     }else{
         entregado.textContent = 'Entregado';
@@ -546,7 +546,6 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
         })
     }
     async function DeleteDeuda(identificador, token, url){
-        console.log(identificador, token);
         return await fetch(url ,{
             method: 'DELETE',
             headers:{
@@ -564,7 +563,6 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
 
     async function updateData( contendInformation, content_table, child_remplace, url){
             const {dataActualizar, messages} = await createData(contendInformation);
-            console.log(dataActualizar, messages);
 
             createContentMessages( content_table , messages, child_remplace);
             if(messages.length === 0){
@@ -577,7 +575,6 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
     }
 
     async function knowIfIsANotaria(notaria){
-    console.log(notaria)
     const response = await fetch('/notarias',{
         method: 'POST',
         headers:{
@@ -604,7 +601,6 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
 }
 
     async function createData(contendInformation, elements = 0){
-        console.log(elements)
             let  dataActualizar = {};
             let messages = [];
             if(elements === 1){
@@ -746,11 +742,11 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
         id_financiamiento === true && createInput('text', 'no_financiamiento', changeInformationElemet);
         createSelect('entrega', [
             {
-                value: '1',
+                value: 1,
                 text: 'Entregado'
             },
             {
-                value: '0',
+                value: 0,
                 text: 'No Entregado'
             }
         ], changeInformationElemet)
@@ -780,11 +776,11 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
         id_gastos === true && createInput('text', 'no_escrituracion', changeInformationElement);
         createSelect('entregado', [
             {
-                value: '1',
+                value: 1,
                 text: 'Entregado'
             },
             {
-                value: '0',
+                value: 0,
                 text: 'No Entregado'
             }
         ], changeInformationElement)
@@ -811,11 +807,11 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
         id_pagare === true && createInput('text', 'no_pagaresMediano', changeInformationElement);
         createSelect('entregado', [
             {
-                value: '1',
+                value: 1,
                 text: 'Entregado'
             },
             {
-                value: '0',
+                value: 0,
                 text: 'No Entregado'
             }
         ], changeInformationElement)
@@ -837,16 +833,15 @@ function buttonDelete(button, tipedeuda, id_deuda, token, url){
         const changeInformationElement = document.createElement('form');
         changeInformationElement.setAttribute('id', 'change_information');
         changeInformationElement.classList.add('change_information');
-        console.log(functionButton);
         functionButton && functionButton.includes('Actualizar') && changeInformationElement.classList.add('pagares_actualizar');
         id_pagareVehiculos === true && createInput('text', 'no_pagare', changeInformationElement);
         createSelect('entregado', [
             {
-                value: '1',
+                value: 1,
                 text: 'Entregado'
             },
             {
-                value: '0',
+                value: 0,
                 text: 'No Entregado'
             }
         ], changeInformationElement)

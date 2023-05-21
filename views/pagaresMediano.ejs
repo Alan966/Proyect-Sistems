@@ -197,15 +197,13 @@
                 const td_name = document.createElement('td');
                 td_name.textContent = item.Nombre;
                 tr.appendChild(td_name);
-                if(user.includes('admin')){
-                    const td_edit = document.createElement('td');
-                    const a_edit = document.createElement('a');
-                    td_edit.setAttribute('class', 'button_informacion');
-                    a_edit.setAttribute('href', `/employer/${item.MATRICULA}`);
-                    a_edit.textContent = 'Editar';
-                    td_edit.appendChild(a_edit);
-                    tr.appendChild(td_edit);
-                }
+                const td_edit = document.createElement('td');
+                const a_edit = document.createElement('a');
+                td_edit.setAttribute('class', 'button_informacion');
+                a_edit.setAttribute('href', `/employer/${item.MATRICULA}`);
+                a_edit.textContent = 'Visitar';
+                td_edit.appendChild(a_edit);
+                tr.appendChild(td_edit);
                 return tr;
             })
             allFinanciamiento.forEach((item) => {
@@ -221,13 +219,12 @@
             if(value.length > 0){
                 allPagaresMediano.innerHTML = '';
                 const result = await getPagaresMedianoBy('no_pagaresMediano', value);
-                console.log(result);
                 if(result.success){
                     allPagaresMediano.innerHTML = '';
                     initialPagaresMediano(result.pagares_mediano_result)
                 }else{
                     allPagaresMediano.innerHTML = '';
-                    initialPagaresMediano();
+                    initialPagaresMediano([]);
                 }
             }else{
                 allPagaresMediano.innerHTML = '';
@@ -245,7 +242,7 @@
                     initialPagaresMediano(result.pagares_mediano_result)
                 }else{
                     allPagaresMediano.innerHTML = '';
-                    initialPagaresMediano();
+                    initialPagaresMediano([]);
                 }
             }else{
                 allPagaresMediano.innerHTML = '';
@@ -263,7 +260,7 @@
                     initialPagaresMediano(result.pagares_mediano_result)
                 }else{
                     allPagaresMediano.innerHTML = '';
-                    initialPagaresMediano();
+                    initialPagaresMediano([]);
                 }
             }else{
                 allPagaresMediano.innerHTML = '';
@@ -281,7 +278,7 @@
                     initialPagaresMediano(result.pagares_mediano_result)
                 }else{
                     allPagaresMediano.innerHTML = '';
-                    initialPagaresMediano();
+                    initialPagaresMediano([]);
                 }
             }else{
                 allPagaresMediano.innerHTML = '';
@@ -299,7 +296,7 @@
                     initialPagaresMediano(response.pagares_mediano_result)
                 }else{
                     allPagaresMediano.innerHTML = '';
-                    initialPagaresMediano();
+                    initialPagaresMediano([]);
                 }
             }else{
                 allPagaresMediano.innerHTML = '';

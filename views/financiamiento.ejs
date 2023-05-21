@@ -184,15 +184,13 @@
                 const td_nombre = document.createElement('td');
                 td_nombre.textContent = item.Nombre;
                 tr.appendChild(td_nombre);
-                if(user.includes('admin')){
-                    const td_editar = document.createElement('td');
-                    const a_editar = document.createElement('a');
-                    td_editar.setAttribute('class', 'button_informacion');
-                    a_editar.setAttribute('href', `/employer/${item.MATRICULA}`);
-                    a_editar.textContent = 'Editar';
-                    td_editar.appendChild(a_editar);
-                    tr.appendChild(td_editar);
-                }
+                const td_editar = document.createElement('td');
+                const a_editar = document.createElement('a');
+                td_editar.setAttribute('class', 'button_informacion');
+                a_editar.setAttribute('href', `/employer/${item.MATRICULA}`);
+                a_editar.textContent = 'Visitar';
+                td_editar.appendChild(a_editar);
+                tr.appendChild(td_editar);
                 return tr;
             });
             allData.forEach((item) => {
@@ -213,7 +211,7 @@
                     initialFinaciamientos(result.financiamiento_result);
                 }else{
                     allFinanciamientos.innerHTML = '';
-                    initialFinaciamientos();
+                    initialFinaciamientos([]);
                 }
             }else{
                 allFinanciamientos.innerHTML = '';
@@ -231,7 +229,7 @@
                     initialFinaciamientos(result.financiamiento_result);
                 }else{
                     allFinanciamientos.innerHTML = '';
-                    initialFinaciamientos();
+                    initialFinaciamientos([]);
                 }
             }else{
                 allFinanciamientos.innerHTML = '';
@@ -249,7 +247,7 @@
                     initialFinaciamientos(result.financiamiento_result);
                 }else{
                     allFinanciamientos.innerHTML = '';
-                    initialFinaciamientos();
+                    initialFinaciamientos([]);
                 }
             }else{
                 allFinanciamientos.innerHTML = '';
@@ -267,7 +265,7 @@
                     initialFinaciamientos(result.financiamiento_result);
                 }else{
                     allFinanciamientos.innerHTML = '';
-                    initialFinaciamientos();
+                    initialFinaciamientos([]);
                 }
             }else{
                 allFinanciamientos.innerHTML = '';
@@ -284,7 +282,7 @@
                     initialFinaciamientos(result.financiamiento_result);
                 }else{
                     allFinanciamientos.innerHTML = '';
-                    initialFinaciamientos();
+                    initialFinaciamientos([]);
                 }
             }else{
                 allFinanciamientos.innerHTML = '';

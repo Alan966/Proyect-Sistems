@@ -218,7 +218,7 @@ section#find_anothers{
     margin: 1em;
     border: 1px solid var(--color-vino);
     height: 2em;
-    width: 18em;
+    width: 100%;
 }
 a{
     text-decoration: none;
